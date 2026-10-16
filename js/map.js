@@ -153,7 +153,7 @@ function draw(now) {
 
     S.fx = S.fx.filter(e => now - e.t0 < e.dur);
     for (const e of S.fx) {
-      const f = (now - e.t0) / e.dur, [x, y] = proj(e.lat, e.lon);
+      const f = clamp((now - e.t0) / e.dur, 0, 1), [x, y] = proj(e.lat, e.lon);
       ctx.strokeStyle = alpha(C[e.col], 1 - f); ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.arc(x, y, 3 + e.r * f, 0, Math.PI * 2); ctx.stroke();
       if (e.col === 'red') { ctx.beginPath(); ctx.arc(x, y, 2 + e.r * .55 * Math.min(1, f * 2), 0, Math.PI * 2); ctx.stroke(); ctx.fillStyle = alpha(C.red, (1 - f) * .35); ctx.fill(); }

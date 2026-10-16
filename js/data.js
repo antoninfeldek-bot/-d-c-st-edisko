@@ -45,11 +45,11 @@ const SITES = {
   WARREN:{n:'F. E. Warren AFB',s:'WARREN',lat:41.13,lon:-104.87,type:'silo',missiles0:150},
   WHITEMAN:{n:'Whiteman AFB (B-2)',s:'WHITEMAN',lat:38.73,lon:-93.55,type:'base'},
   BARKSDALE:{n:'Barksdale AFB (B-52)',s:'BARKSDALE',lat:32.5,lon:-93.66,type:'base'},
-  KINGS:{n:'Kings Bay (ponorky SSBN)',s:'KINGS BAY',lat:30.8,lon:-81.56,type:'base'},
-  BANGOR:{n:'Bangor (ponorky SSBN)',s:'BANGOR',lat:47.73,lon:-122.71,type:'base',left:1},
+  KINGS:{n:'Kings Bay (ponorky SSBN)',en:'Kings Bay (SSBN submarines)',s:'KINGS BAY',lat:30.8,lon:-81.56,type:'base'},
+  BANGOR:{n:'Bangor (ponorky SSBN)',en:'Bangor (SSBN submarines)',s:'BANGOR',lat:47.73,lon:-122.71,type:'base',left:1},
   TINKER:{n:'Tinker AFB (E-6B TACAMO)',s:'TINKER',lat:35.41,lon:-97.39,type:'base'},
   OFFUTT:{n:'Offutt AFB (STRATCOM)',s:'OFFUTT',lat:41.12,lon:-95.91,type:'base'},
-  NORFOLK:{n:'Námořní základna Norfolk',s:'NORFOLK',lat:36.95,lon:-76.33,type:'base'},
+  NORFOLK:{n:'Námořní základna Norfolk',en:'Naval Station Norfolk',s:'NORFOLK',lat:36.95,lon:-76.33,type:'base'},
   // defence
   GREELY:{n:'Fort Greely (GMD)',s:'GREELY',lat:63.98,lon:-145.73,type:'gmd',stock0:12},
   VAFB:{n:'Vandenberg (GMD)',s:'VANDENBERG',lat:34.73,lon:-120.57,type:'gmd',stock0:4,left:1},
@@ -67,9 +67,9 @@ const RADARS = ['THULE','CLEAR','CAPECOD','BEALE','FYLING'];
 const SILOS = ['MALM','MINOT','WARREN'];
 
 const LAUNCH = {
-  ICBM:[['Kozelsk',54.03,35.78],['Tatiščevo',51.67,45.6],['Tějkovo',56.93,40.53],['Jasnyj',51.1,59.85],['Užur',55.3,89.83],['Novosibirsk',55.0,83.0],['Irkutsk',52.3,104.3],['Barnaul',53.3,83.8]],
-  SLBM:[['Barentsovo moře',73,40,'arc'],['severní Atlantik',47,-42,'atl'],['severní Pacifik',44,-158,'pac'],['Ochotské moře',55,150,'pac'],['Norské moře',68,2,'arc']],
-  BMB:[['Engels',51.48,46.2],['Ukrajinka',51.17,128.4],['Olenja',68.15,33.46]],
+  ICBM:[['Kozelsk',54.03,35.78],['Tatiščevo',51.67,45.6,null,'Tatishchevo'],['Tějkovo',56.93,40.53,null,'Teykovo'],['Jasnyj',51.1,59.85,null,'Yasny'],['Užur',55.3,89.83,null,'Uzhur'],['Novosibirsk',55.0,83.0],['Irkutsk',52.3,104.3],['Barnaul',53.3,83.8]],
+  SLBM:[['Barentsovo moře',73,40,'arc','Barents Sea'],['severní Atlantik',47,-42,'atl','North Atlantic'],['severní Pacifik',44,-158,'pac','North Pacific'],['Ochotské moře',55,150,'pac','Sea of Okhotsk'],['Norské moře',68,2,'arc','Norwegian Sea']],
+  BMB:[['Engels',51.48,46.2],['Ukrajinka',51.17,128.4,null,'Ukrainka'],['Olenja',68.15,33.46,null,'Olenya']],
 };
 const POOL = {
   ICBM:{MALM:9,MINOT:9,WARREN:9,OFFUTT:4,GREELY:4,VAFB:3,CMOC:2,DC:5,NYC:5,CHI:4,LA:4,HOU:3,SEA:3,SF:3,BOS:2,ATL:3,DEN:2,ELM:2,KINGS:2,BANGOR:2,NORFOLK:2,WHITEMAN:3,BARKSDALE:2,TINKER:1,CLEAR:2,BEALE:2,THULE:2},
@@ -80,29 +80,29 @@ const POOL = {
 
 // Retaliation target sets (abstract numbers)
 const RU_SETS = {
-  cf:{n:'Sila ICBM',d:'Odpalovací pole raket. Sníží ruský arzenál.',
+  cf:{n:'Sila ICBM',en:'ICBM silos',d:'Odpalovací pole raket. Sníží ruský arzenál.',dEn:'Missile fields. Reduces the Russian arsenal.',
       targets:[[54.03,35.78],[51.67,45.6],[56.93,40.53],[51.1,59.85],[55.3,89.83],[55.0,83.0],[52.3,104.3],[53.3,83.8]],esc:15,cred:15,cas:1.2,missiles:30},
-  nav:{n:'Námořní a letecké základny',d:'Omezí útoky ponorek a bombardérů.',
+  nav:{n:'Námořní a letecké základny',en:'Naval and air bases',d:'Omezí útoky ponorek a bombardérů.',dEn:'Curbs submarine and bomber attacks.',
       targets:[[69.07,33.42],[52.93,158.4],[51.48,46.2],[51.17,128.4],[68.15,33.46]],esc:8,cred:10,cas:0.6,missiles:15},
-  c2:{n:'Velitelská centra',d:'Ochromí koordinaci útoků, ale nebude s kým jednat.',
+  c2:{n:'Velitelská centra',en:'Command centres',d:'Ochromí koordinaci útoků, ale nebude s kým jednat.',dEn:'Paralyses attack coordination, but leaves no one to negotiate with.',
       targets:[[55.75,37.6],[59.5,59.0],[54.25,58.1]],esc:25,cred:15,cas:3,missiles:12},
-  cv:{n:'Průmysl a města',d:'Odveta proti obyvatelstvu. Obrovské oběti.',
+  cv:{n:'Průmysl a města',en:'Industry and cities',d:'Odveta proti obyvatelstvu. Obrovské oběti.',dEn:'Retaliation against the population. Enormous casualties.',
       targets:[[55.75,37.6],[59.9,30.3],[56.8,60.6],[43.1,131.9],[55.0,82.9],[53.2,50.1],[48.7,44.5],[56.3,44.0]],esc:40,cred:20,cas:40,missiles:40},
 };
 const PLATFORMS = {
-  icbm:{n:'ICBM Minuteman III',s:'ICBM',ft:1650,d:'Dopad za ~28 min. Rakety ze sil, která ještě stojí.'},
-  slbm:{n:'SLBM Trident II',s:'SLBM',ft:900,d:'Dopad za ~15 min. Vyžaduje spojení E-6B TACAMO.'},
-  bomb:{n:'Bombardéry s ALCM',s:'Bombardéry',ft:10800,d:'Dopad za ~3 h. Jen bombardéry ve vzduchu. Lze odvolat.'},
+  icbm:{n:'ICBM Minuteman III',s:'ICBM',ft:1650,d:'Dopad za ~28 min. Rakety ze sil, která ještě stojí.',dEn:'Impact in ~28 min. Missiles from silos still standing.'},
+  slbm:{n:'SLBM Trident II',s:'SLBM',ft:900,d:'Dopad za ~15 min. Vyžaduje spojení E-6B TACAMO.',dEn:'Impact in ~15 min. Requires the E-6B TACAMO link.'},
+  bomb:{n:'Bombardéry s ALCM',en:'Bombers with ALCM',s:'Bombardéry',sEn:'Bombers',ft:10800,d:'Dopad za ~3 h. Jen bombardéry ve vzduchu. Lze odvolat.',dEn:'Impact in ~3 h. Airborne bombers only. Can be recalled.'},
 };
 const SSBN_PATROL = [[40,-38],[62,-20],[45,-150],[30,-165]];
 
 const STATIONS = {
-  natl:{n:'Severní Atlantik',lat:44,lon:-50},
-  nor:{n:'Norské moře',lat:67,lon:2},
-  east:{n:'Východní pobřeží',lat:37,lon:-70},
-  npac:{n:'Severní Pacifik',lat:47,lon:-160},
-  bering:{n:'Beringovo moře',lat:58,lon:-175},
-  west:{n:'Západní pobřeží',lat:38,lon:-128},
+  natl:{n:'Severní Atlantik',en:'North Atlantic',lat:44,lon:-50},
+  nor:{n:'Norské moře',en:'Norwegian Sea',lat:67,lon:2},
+  east:{n:'Východní pobřeží',en:'East Coast',lat:37,lon:-70},
+  npac:{n:'Severní Pacifik',en:'North Pacific',lat:47,lon:-160},
+  bering:{n:'Beringovo moře',en:'Bering Sea',lat:58,lon:-175},
+  west:{n:'Západní pobřeží',en:'West Coast',lat:38,lon:-128},
 };
 const SHIPS0 = [
   {id:'DDG-64',name:'USS Carney',st:'natl'},
@@ -110,23 +110,23 @@ const SHIPS0 = [
   {id:'DDG-89',name:'USS Mustin',st:'npac'},
 ];
 const WINGS0 = [
-  {id:'b52m',name:'5. křídlo B-52',base:'MINOT',n:10},
-  {id:'b2',name:'509. křídlo B-2',base:'WHITEMAN',n:8},
-  {id:'b52b',name:'2. křídlo B-52',base:'BARKSDALE',n:10},
+  {id:'b52m',name:'5. křídlo B-52',en:'5th Bomb Wing B-52',base:'MINOT',n:10},
+  {id:'b2',name:'509. křídlo B-2',en:'509th Bomb Wing B-2',base:'WHITEMAN',n:8},
+  {id:'b52b',name:'2. křídlo B-52',en:'2nd Bomb Wing B-52',base:'BARKSDALE',n:10},
 ];
 
 const SCEN = {
-  standard:{n:'Odvetný řetězec',d:'Rusko zahájilo úder na americká raketová sila. Ubráníte se a zastavíte eskalaci?',
+  standard:{n:'Odvetný řetězec',en:'Chain of Retaliation',d:'Rusko zahájilo úder na americká raketová sila. Ubráníte se a zastavíte eskalaci?',dEn:'Russia has struck the American missile fields. Can you defend and stop the escalation?',
     esc:35,cred:70,arsenal:150,slbm:.33,bmb:.12,firstWave:420},
-  subs:{n:'Tichý úder',d:'Ruské ponorky útočí z blízkosti pobřeží. Varovací doba je jen kolem 10 minut a Washington je v ohrožení.',
+  subs:{n:'Tichý úder',en:'Silent Strike',d:'Ruské ponorky útočí z blízkosti pobřeží. Varovací doba je jen kolem 10 minut a Washington je v ohrožení.',dEn:'Russian submarines strike from close to the coast. Warning time is only about 10 minutes and Washington is at risk.',
     esc:45,cred:65,arsenal:100,slbm:.7,bmb:.05,firstWave:480},
-  petrov:{n:'Podzim 83',d:'Systém včasné výstrahy hlásí útok, ale satelity a radary si odporují. Je to skutečné? Zdrženlivost může zachránit svět.',
+  petrov:{n:'Podzim 83',en:'Autumn 83',d:'Systém včasné výstrahy hlásí útok, ale satelity a radary si odporují. Je to skutečné? Zdrženlivost může zachránit svět.',dEn:'Early warning reports an attack, but satellites and radars disagree. Is it real? Restraint may save the world.',
     esc:25,cred:70,arsenal:150,slbm:.3,bmb:.1,firstWave:600,petrov:true},
 };
 const DIFF = {
-  kadet:{n:'Kadet',d:'Menší vlny, spolehlivější interceptory.',wave:.7,falseP:.25,pk:1.15,score:.8},
-  velitel:{n:'Velitel',d:'Vyvážená obtížnost.',wave:1,falseP:.35,pk:1,score:1},
-  veteran:{n:'Veterán',d:'Větší vlny, víc falešných poplachů.',wave:1.3,falseP:.45,pk:.85,score:1.3},
+  kadet:{n:'Kadet',en:'Cadet',d:'Menší vlny, spolehlivější interceptory.',dEn:'Smaller waves, more reliable interceptors.',wave:.7,falseP:.25,pk:1.15,score:.8},
+  velitel:{n:'Velitel',en:'Commander',d:'Vyvážená obtížnost.',dEn:'Balanced difficulty.',wave:1,falseP:.35,pk:1,score:1},
+  veteran:{n:'Veterán',en:'Veteran',d:'Větší vlny, víc falešných poplachů.',dEn:'Bigger waves, more false alarms.',wave:1.3,falseP:.45,pk:.85,score:1.3},
 };
 
 G.DATA = { LAND, WATER, SITES, RADARS, SILOS, LAUNCH, POOL, RU_SETS, PLATFORMS, SSBN_PATROL, STATIONS, SHIPS0, WINGS0, SCEN, DIFF };

@@ -13,182 +13,176 @@
 <body>
 <div class="app">
   <header class="top">
-    <div class="brand">Velín Cheyenne Mountain<small id="scenName">NORAD · USNORTHCOM · STRATCOM</small></div>
+    <div class="brand"><span data-i18n="brand">Velín Cheyenne Mountain</span><small id="scenName">NORAD · USNORTHCOM · STRATCOM</small></div>
     <div class="stat"><label>DEFCON</label><div class="defcon" id="defcon"><span data-l="5">5</span><span data-l="4">4</span><span data-l="3">3</span><span data-l="2">2</span><span data-l="1">1</span></div></div>
-    <div class="stat"><label>Čas od detekce</label><div class="v" id="clock">T+00:00:00</div></div>
+    <div class="stat"><label data-i18n="since">Čas od detekce</label><div class="v" id="clock">T+00:00:00</div></div>
     <div class="stat"><label>Zulu</label><div class="v" id="zulu">03:12Z</div></div>
-    <div class="stat"><label>Eskalace <b id="escVal">0</b></label><div class="meter" title="Ochota protivníka pokračovat v útocích"><i id="escBar"></i><span class="mark" style="left:20%"></span></div></div>
-    <div class="stat"><label>Odstrašení <b id="credVal">0</b></label><div class="meter cred" title="Věrohodnost americké odvety"><i id="credBar"></i><span class="mark" style="left:40%"></span></div></div>
-    <div class="stat"><label>Veřejný pořádek <b id="orderVal">0</b></label><div class="meter order" title="Ovlivňuje účinnost varování EAS"><i id="orderBar"></i></div></div>
-    <div class="stat"><label>Ztráty USA</label><div class="v red" id="casVal">0</div></div>
-    <div class="stat"><label>Velení</label><div class="v sm" id="leaderVal">Prezident</div></div>
+    <div class="stat"><label><span data-i18n="esc">Eskalace</span> <b id="escVal">0</b></label><div class="meter" data-i18n-title="escTip"><i id="escBar"></i><span class="mark" style="left:20%"></span></div></div>
+    <div class="stat"><label><span data-i18n="cred">Odstrašení</span> <b id="credVal">0</b></label><div class="meter cred" data-i18n-title="credTip"><i id="credBar"></i><span class="mark" style="left:40%"></span></div></div>
+    <div class="stat"><label><span data-i18n="order">Veřejný pořádek</span> <b id="orderVal">0</b></label><div class="meter order" data-i18n-title="orderTip"><i id="orderBar"></i></div></div>
+    <div class="stat"><label data-i18n="cas">Ztráty USA</label><div class="v red" id="casVal">0</div></div>
+    <div class="stat"><label data-i18n="command">Velení</label><div class="v sm" id="leaderVal">—</div></div>
     <div class="ctrl">
-      <button class="btn" id="bPause" title="Mezerník">Pauza</button>
+      <button class="btn" id="bPause" data-i18n-title="pauseTip" data-i18n="pause">Pauza</button>
       <button class="btn spd on" data-s="1">1×</button>
       <button class="btn spd" data-s="3">3×</button>
       <button class="btn spd" data-s="6">6×</button>
-      <button class="btn" id="bSound">Zvuk: zap</button>
+      <button class="btn" id="bSound" data-i18n="sound">Zvuk: zap</button>
+      <button class="btn" id="bLang" data-i18n-title="langTip">EN</button>
     </div>
   </header>
 
   <div class="main">
-    <section class="panel" aria-label="Sledované kontakty a města">
-      <h2>Sledované kontakty <span id="trkCount">0 aktivních</span></h2>
-      <div class="sub-h"><span id="verifyCap">Ověřovací kanály 0/3</span><span id="confirmInfo">Radar potvrdí 8:00 před dopadem</span></div>
-      <div class="list" id="trkList"><div class="empty" id="trkEmpty">Žádné kontakty. Satelity SBIRS a radary včasné výstrahy jsou v pohotovosti.</div></div>
-      <h2>Města · varování EAS <span id="femaCount">FEMA 4</span></h2>
+    <section class="panel">
+      <h2><span data-i18n="contacts">Sledované kontakty</span> <span id="trkCount"></span></h2>
+      <div class="sub-h"><span id="verifyCap"></span><span id="confirmInfo"></span></div>
+      <div class="list" id="trkList"><div class="empty" id="trkEmpty" data-i18n="noContacts">Žádné kontakty.</div></div>
+      <h2><span data-i18n="cities">Města · varování EAS</span> <span id="femaCount">FEMA 4</span></h2>
       <div class="list" id="cityList"></div>
     </section>
 
-    <section class="map" id="mapWrap" aria-label="Situační mapa">
+    <section class="map" id="mapWrap" data-i18n-aria="mapAria">
       <canvas id="map"></canvas>
-      <div class="maphead">Azimutální projekce · severní pól</div>
+      <div class="maphead" data-i18n="mapHead">Azimutální projekce · severní pól</div>
       <div class="forecast" id="forecast" hidden></div>
       <div class="zoom">
-        <button class="btn" id="zIn" aria-label="Přiblížit">+</button>
-        <button class="btn" id="zOut" aria-label="Oddálit">−</button>
-        <button class="btn" id="zUS" aria-label="Zaměřit USA" title="Zaměřit USA">US</button>
-        <button class="btn" id="zReset" aria-label="Výchozí pohled" title="Celý pohled">⟲</button>
+        <button class="btn" id="zIn" data-i18n-aria="zIn">+</button>
+        <button class="btn" id="zOut" data-i18n-aria="zOut">−</button>
+        <button class="btn" id="zUS" data-i18n-aria="zUS" data-i18n-title="zUS">US</button>
+        <button class="btn" id="zReset" data-i18n-aria="zReset" data-i18n-title="zReset">⟲</button>
       </div>
       <div class="legend">
-        <div><i style="border-top-style:dashed;border-color:var(--amber)"></i>Neověřený kontakt</div>
-        <div><i style="border-color:var(--red)"></i>Potvrzená hrozba</div>
-        <div><i style="border-color:var(--cyan)"></i>Vlastní síly · ◆ torpédoborec</div>
-        <div><i style="border-color:var(--dim)"></i>Falešný / zničený</div>
+        <div><i style="border-top-style:dashed;border-color:var(--amber)"></i><span data-i18n="lgU">Neověřený kontakt</span></div>
+        <div><i style="border-color:var(--red)"></i><span data-i18n="lgC">Potvrzená hrozba</span></div>
+        <div><i style="border-color:var(--cyan)"></i><span data-i18n="lgO">Vlastní síly · ◆ torpédoborec</span></div>
+        <div><i style="border-color:var(--dim)"></i><span data-i18n="lgF">Falešný / zničený</span></div>
       </div>
     </section>
 
-    <section class="panel" aria-label="Velení">
+    <section class="panel">
       <nav class="tabs" role="tablist">
-        <button class="tab on" data-tab="kontakt" role="tab">Kontakt</button>
-        <button class="tab" data-tab="sily" role="tab">Síly</button>
-        <button class="tab" data-tab="intel" role="tab">Zprav.</button>
-        <button class="tab" data-tab="dipl" role="tab">Diplom.</button>
-        <button class="tab" data-tab="civil" role="tab">Civil</button>
-        <button class="tab" data-tab="odveta" role="tab">Odveta</button>
+        <button class="tab on" data-tab="kontakt" role="tab" data-i18n="tabK">Kontakt</button>
+        <button class="tab" data-tab="sily" role="tab" data-i18n="tabS">Síly</button>
+        <button class="tab" data-tab="intel" role="tab" data-i18n="tabI">Zprav.</button>
+        <button class="tab" data-tab="dipl" role="tab" data-i18n="tabD">Diplom.</button>
+        <button class="tab" data-tab="civil" role="tab" data-i18n="tabC">Civil</button>
+        <button class="tab" data-tab="odveta" role="tab" data-i18n="tabO">Odveta</button>
       </nav>
 
       <div class="pane" data-pane="kontakt">
         <div class="sec">
           <div class="kv"><span class="detail-id" id="dId">—</span><span class="chip" id="dChip" hidden></span></div>
-          <div class="kv"><span>Typ</span><b id="dKind">—</b></div>
-          <div class="kv"><span>Původ</span><b id="dFrom">—</b></div>
-          <div class="kv"><span>Pravděpodobný cíl</span><b id="dTgt">—</b></div>
-          <div class="kv"><span>Čas do dopadu</span><b id="dEta">—</b></div>
+          <div class="kv"><span data-i18n="type">Typ</span><b id="dKind">—</b></div>
+          <div class="kv"><span data-i18n="origin">Původ</span><b id="dFrom">—</b></div>
+          <div class="kv"><span data-i18n="target">Pravděpodobný cíl</span><b id="dTgt">—</b></div>
+          <div class="kv"><span data-i18n="tti">Čas do dopadu</span><b id="dEta">—</b></div>
           <p class="hint" id="dHint" hidden></p>
           <div class="row">
-            <button class="btn" id="bVerify" title="V">Ověřit</button>
-            <button class="btn" id="bPrev" title="K">◂ Předchozí</button>
-            <button class="btn" id="bNext" title="J">Další ▸</button>
+            <button class="btn" id="bVerify" title="V" data-i18n="verify">Ověřit</button>
+            <button class="btn" id="bPrev" title="K" data-i18n="prev">◂ Předchozí</button>
+            <button class="btn" id="bNext" title="J" data-i18n="next">Další ▸</button>
           </div>
-          <p class="note" id="dNote">Vyberte kontakt v seznamu nebo na mapě.</p>
+          <p class="note" id="dNote"></p>
         </div>
-        <h3 class="ph">Prostředky k zásahu</h3>
+        <h3 class="ph" data-i18n="engage">Prostředky k zásahu</h3>
         <div class="sec" id="shooters"></div>
       </div>
 
       <div class="pane" data-pane="sily" hidden>
-        <h3 class="ph">Pohotovost</h3>
+        <h3 class="ph" data-i18n="readiness">Pohotovost</h3>
         <div class="sec">
-          <div class="kv"><span>Stupeň pohotovosti</span><b id="defStat">DEFCON 3</b></div>
-          <div class="row"><button class="btn" id="bDefUp">Zvýšit (DEFCON −1)</button><button class="btn" id="bDefDown">Snížit</button></div>
-          <p class="note">DEFCON 2 aktivuje GMD. DEFCON 1 je nutný pro jaderný úder, ale zvyšuje eskalaci.</p>
+          <div class="kv"><span data-i18n="readinessLvl">Stupeň pohotovosti</span><b id="defStat">DEFCON 3</b></div>
+          <div class="row"><button class="btn" id="bDefUp" data-i18n="defUp">Zvýšit (DEFCON −1)</button><button class="btn" id="bDefDown" data-i18n="defDown">Snížit</button></div>
+          <p class="note" data-i18n="defNote"></p>
         </div>
-        <h3 class="ph">Protiraketová obrana</h3>
+        <h3 class="ph" data-i18n="bmd">Protiraketová obrana</h3>
         <div class="sec" id="defList"></div>
-        <h3 class="ph">Torpédoborce Aegis</h3>
+        <h3 class="ph" data-i18n="aegis">Torpédoborce Aegis</h3>
         <div class="sec" id="shipList"></div>
-        <h3 class="ph">Strategické síly</h3>
+        <h3 class="ph" data-i18n="triad">Strategické síly</h3>
         <div class="sec" id="triad"></div>
       </div>
 
       <div class="pane" data-pane="intel" hidden>
-        <h3 class="ph">Operace</h3>
+        <h3 class="ph" data-i18n="ops">Operace</h3>
         <div class="sec" id="intelOps"></div>
-        <h3 class="ph">Síť radarů včasné výstrahy</h3>
+        <h3 class="ph" data-i18n="radars">Síť radarů včasné výstrahy</h3>
         <div class="sec" id="radarList"></div>
       </div>
 
       <div class="pane" data-pane="dipl" hidden>
-        <h3 class="ph">Horká linka Washington–Moskva</h3>
+        <h3 class="ph" data-i18n="hotline">Horká linka Washington–Moskva</h3>
         <div class="sec">
-          <div class="kv"><span>Stav linky</span><b id="hotStat">Navazuje se</b></div>
+          <div class="kv"><span data-i18n="lineStatus">Stav linky</span><b id="hotStat"></b></div>
           <div class="choice-list" id="hotList"></div>
         </div>
-        <h3 class="ph">Spojenci a prostředníci</h3>
+        <h3 class="ph" data-i18n="allies">Spojenci a prostředníci</h3>
         <div class="sec" id="dipList"></div>
-        <h3 class="ph">Cesta k příměří</h3>
+        <h3 class="ph" data-i18n="truce">Cesta k příměří</h3>
         <div class="sec"><div class="req" id="truceReq"></div></div>
       </div>
 
       <div class="pane" data-pane="civil" hidden>
-        <h3 class="ph">Kontinuita vlády</h3>
+        <h3 class="ph" data-i18n="cog">Kontinuita vlády</h3>
         <div class="sec" id="cogList"></div>
-        <h3 class="ph">Obyvatelstvo</h3>
+        <h3 class="ph" data-i18n="pop">Obyvatelstvo</h3>
         <div class="sec" id="civList"></div>
       </div>
 
       <div class="pane" data-pane="odveta" hidden>
-        <div class="sec">
-          <div class="req" id="retReq"></div>
-        </div>
-        <h3 class="ph">1 · Cíle</h3>
+        <div class="sec"><div class="req" id="retReq"></div></div>
+        <h3 class="ph" data-i18n="st1">1 · Cíle</h3>
         <div class="sec" id="setList"></div>
-        <h3 class="ph">2 · Nosiče</h3>
+        <h3 class="ph" data-i18n="st2">2 · Nosiče</h3>
         <div class="sec" id="platList"></div>
-        <h3 class="ph">3 · Autorizace</h3>
+        <h3 class="ph" data-i18n="st3">3 · Autorizace</h3>
         <div class="sec">
           <div class="preview" id="preview"></div>
           <div class="sas">
-            <button class="btn" id="bSas">Rozlomit obálku SAS</button>
+            <button class="btn" id="bSas" data-i18n="sas">Rozlomit obálku SAS</button>
             <code id="sasCode" hidden>····</code>
-            <label class="note" for="retCode">Autentizační kód z obálky</label>
+            <label class="note" for="retCode" data-i18n="sasLbl">Autentizační kód z obálky</label>
             <input id="retCode" maxlength="4" autocomplete="off" spellcheck="false" placeholder="____">
           </div>
-          <button class="btn danger big" id="bStrike">Autorizovat jaderný úder</button>
+          <button class="btn danger big" id="bStrike" data-i18n="strike">Autorizovat jaderný úder</button>
           <p class="note" id="strikeNote"></p>
         </div>
-        <h3 class="ph">Bombardéry na cestě</h3>
+        <h3 class="ph" data-i18n="bombers">Bombardéry na cestě</h3>
         <div class="sec">
-          <div class="kv"><span>Údery bombardérů</span><b id="bombStat">Žádné</b></div>
-          <button class="btn" id="bRecall">Odvolat bombardéry</button>
+          <div class="kv"><span data-i18n="bomberStrikes">Údery bombardérů</span><b id="bombStat"></b></div>
+          <button class="btn" id="bRecall" data-i18n="recall">Odvolat bombardéry</button>
         </div>
       </div>
     </section>
   </div>
 
-  <section class="logwrap" aria-label="Hlášení"><ol class="log" id="log"></ol></section>
+  <section class="logwrap" data-i18n-aria="logAria"><ol class="log" id="log"></ol></section>
 </div>
 
 <!-- start / end screen -->
 <div class="ovl" id="ovl">
   <div class="brief" id="brief">
     <p class="eyebrow">NORAD · Cheyenne Mountain · 16. 10. · 03:12 Z</p>
-    <h1>Velín Cheyenne Mountain</h1>
-    <p>Jste velitel směny v podzemním velínu NORAD. Satelity právě hlásí starty raket. Během 90 minut rozhodujete o obraně, strategických silách, diplomacii, ochraně obyvatel a o tom, zda konflikt skončí příměřím, nebo totální válkou.</p>
+    <h1 data-i18n="brand">Velín Cheyenne Mountain</h1>
+    <p data-i18n="intro"></p>
     <div class="pick">
-      <h3>Scénář</h3>
+      <h3 data-i18n="language">Jazyk</h3>
+      <div class="opts row2" id="langOpts">
+        <button type="button" class="btn optcard" data-lang="cs"><b>Čeština</b></button>
+        <button type="button" class="btn optcard" data-lang="en"><b>English</b></button>
+      </div>
+      <h3 data-i18n="scenario">Scénář</h3>
       <div class="opts" id="scenOpts"></div>
-      <h3>Obtížnost</h3>
-      <div class="opts row3" id="diffOpts"></div>
+      <h3 data-i18n="difficulty">Obtížnost</h3>
+      <div class="opts" id="diffOpts"></div>
     </div>
     <details class="rules-wrap">
-      <summary>Jak hrát</summary>
-      <ul class="rules">
-        <li><b>Kontakty ověřujte.</b> Část hlášení jsou falešné poplachy. Máte 3 ověřovací kanály, ověření trvá 90 s. Radary cíl potvrdí samy až těsně před dopadem.</li>
-        <li><b>Obrana:</b> GMD (jen ICBM, DEFCON 2), torpédoborce Aegis se střelami SM-3 (ICBM i SLBM v dosahu lodi), stíhači F-22 proti bombardérům. Lodě lze přesouvat.</li>
-        <li><b>Strategické síly:</b> nechte vzlétnout bombardéry, vyplout ponorky a vyslat E-6B TACAMO. Co zůstane na zemi, může být zničeno.</li>
-        <li><b>Zpravodajství:</b> satelitní průzkum předpoví další vlnu, odposlech zrychlí ověřování, kybernetická operace může útok zdržet.</li>
-        <li><b>Civilní ochrana:</b> varujte města přes EAS, evakuujte prezidenta i viceprezidenta, posílejte FEMA proti spadu a držte veřejný pořádek.</li>
-        <li><b>Diplomacie:</b> horká linka nabízí čtyři přístupy. Příměří nastane po dvou dohodách, když eskalace klesne pod 20 a odstrašení zůstane aspoň 40.</li>
-        <li><b>Odveta:</b> vyberte cíle a nosiče, zadejte kód z obálky SAS. Každý úder zvedne eskalaci a vyvolá odpověď.</li>
-        <li><b>Rozhodovací karty</b> během hry pozastaví čas a chtějí rychlou volbu.</li>
-        <li>Klávesy: mezerník pauza, 1/2/3 rychlost, V ověřit, J/K další/předchozí kontakt, G nejlepší interceptor.</li>
-      </ul>
+      <summary data-i18n="howto">Jak hrát</summary>
+      <ul class="rules" data-i18n-html="rules"></ul>
     </details>
-    <button class="btn primary" id="startBtn">Převzít velení</button>
+    <button class="btn primary" id="startBtn" data-i18n="take">Převzít velení</button>
     <div id="scoresStart"></div>
-    <p class="fine">Fiktivní simulace. Čísla a postupy jsou zjednodušené a neodpovídají skutečným plánům.</p>
+    <p class="fine" data-i18n="fine"></p>
   </div>
 </div>
 
@@ -199,11 +193,12 @@
     <h2 class="card-title" id="cardTitle"></h2>
     <p id="cardText"></p>
     <div class="choice-list" id="cardChoices"></div>
-    <p class="fine">Čas je pozastaven, dokud nerozhodnete.</p>
+    <p class="fine" data-i18n="paused">Čas je pozastaven, dokud nerozhodnete.</p>
   </div>
 </div>
 
 <script src="js/util.js"></script>
+<script src="js/i18n.js"></script>
 <script src="js/data.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/sim.js"></script>

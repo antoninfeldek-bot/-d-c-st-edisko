@@ -6,6 +6,12 @@ Webová strategická hra pro PC. Jste velitel směny v podzemním velínu NORAD 
 
 Otevřete `index.html` v prohlížeči. Hra nepotřebuje server ani instalaci, jen připojení k internetu kvůli fontům.
 
+## Jazyk
+
+Hra je česky i anglicky. Jazyk vyberete na úvodní obrazovce nebo kdykoli tlačítkem EN/CZ vpravo nahoře. Volba se uloží v prohlížeči. Při první návštěvě hra použije češtinu pro český nebo slovenský prohlížeč, jinak angličtinu.
+
+*The game is available in Czech and English. Pick the language on the start screen or switch any time with the EN/CZ button in the top right.*
+
 ## Scénáře a obtížnost
 
 - **Odvetný řetězec:** Rusko útočí na americká raketová sila. Ubráníte se a zastavíte eskalaci?
@@ -33,6 +39,7 @@ Klávesy: mezerník pauza, 1/2/3 rychlost, V ověřit, J/K další a předchozí
 
 - `index.html`: rozvržení
 - `css/style.css`: vzhled
+- `js/i18n.js`: statické texty v obou jazycích
 - `js/data.js`: mapa, základny, scénáře
 - `js/sim.js`: simulace
 - `js/events.js`: rozhodovací karty

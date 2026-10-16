@@ -1,7 +1,21 @@
 'use strict';
-// Shared helpers: math on the sphere, formatting, Czech plurals.
+// Shared helpers: language, math on the sphere, formatting, plurals.
 window.G = window.G || {};
 (() => {
+  // Language: saved choice, otherwise Czech for Czech/Slovak browsers and English for the rest.
+  G.lang = (() => {
+    try { const v = localStorage.getItem('velin-lang'); if (v === 'cs' || v === 'en') return v; } catch (_) {}
+    return /^(cs|sk)/i.test(navigator.language || '') ? 'cs' : 'en';
+  })();
+  const L = (cs, en) => G.lang === 'en' ? en : cs;
+  // [cs, en] pair or plain string
+  const tx = v => Array.isArray(v) ? L(v[0], v[1]) : v;
+  // localized name / description of a data object
+  const nm = o => (G.lang === 'en' && o.en) || o.n;
+  const ds = o => (G.lang === 'en' && o.dEn) || o.d;
+  // plural: cs = [1, 2–4, 5+], en = [1, other]
+  const pl = (n, cs, en) => G.lang === 'en' ? (n === 1 ? en[0] : en[1]) : (n === 1 ? cs[0] : (n >= 2 && n <= 4) ? cs[1] : cs[2]);
+
   const DEG = Math.PI / 180;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const rand = (a, b) => a + Math.random() * (b - a);
@@ -30,9 +44,9 @@ window.G = window.G || {};
   const pad = n => String(Math.floor(n)).padStart(2, '0');
   const fmtT = t => `T+${pad(t / 3600)}:${pad(t / 60 % 60)}:${pad(t % 60)}`;
   const fmtEta = s => s <= 0 ? '00:00' : `${pad(s / 60)}:${pad(s % 60)}`;
-  const fmtM = m => m < 0.05 ? '0' : `${m.toFixed(1).replace('.', ',')} mil.`;
+  const fmtM = m => m < 0.05 ? '0' : G.lang === 'en' ? `${m.toFixed(1)} M` : `${m.toFixed(1).replace('.', ',')} mil.`;
+  const fmtPop = m => G.lang === 'en' ? `${m} M` : `${String(m).replace('.', ',')} mil.`;
   const zulu = t => { const z = (3 * 3600 + 12 * 60 + t) % 86400; return `${pad(z / 3600)}:${pad(z / 60 % 60)}Z`; };
-  const plural = (n, one, few, many) => n === 1 ? one : (n >= 2 && n <= 4) ? few : many;
 
-  Object.assign(G, { DEG, clamp, rand, pick, toVec, fromVec, slerp, along, angDist, pad, fmtT, fmtEta, fmtM, zulu, plural });
+  Object.assign(G, { L, tx, nm, ds, pl, DEG, clamp, rand, pick, toVec, fromVec, slerp, along, angDist, pad, fmtT, fmtEta, fmtM, fmtPop, zulu });
 })();

@@ -163,6 +163,7 @@ select{font:inherit;font-size:11px;background:var(--bg);color:var(--fg);border:1
 .brief h3{margin:0;font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
 .pick{display:grid;gap:8px}
 .opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.opts.row2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .optcard{display:grid;gap:4px;align-content:start;text-align:left;text-transform:none;letter-spacing:0;padding:10px}
 .optcard b{font-family:var(--display);font-size:16px;letter-spacing:.04em;text-transform:uppercase}
 .optcard small{color:var(--dim);font-size:11px;line-height:1.45}
