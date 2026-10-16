@@ -1,50 +1,48 @@
-# Velín Cheyenne Mountain
+# Krizový štáb
 
-Webová strategická hra pro PC. Jste velitel směny v podzemním velínu NORAD v Cheyenne Mountain během 90 minut fiktivního jaderného konfliktu.
+Diplomatická strategická hra pro PC v češtině i angličtině. Jste poradce prezidenta pro národní bezpečnost a vedete krizový štáb Bílého domu ve chvíli, kdy je svět na pokraji jaderné války.
+
+*A diplomatic strategy game in Czech and English. You run the White House Situation Room while the world stands on the brink of nuclear war.*
 
 ## Jak spustit
 
 Otevřete `index.html` v prohlížeči. Hra nepotřebuje server ani instalaci, jen připojení k internetu kvůli fontům.
 
-## Jazyk
+## Jak se hraje
 
-Hra je česky i anglicky. Jazyk vyberete na úvodní obrazovce nebo kdykoli tlačítkem EN/CZ vpravo nahoře. Volba se uloží v prohlížeči. Při první návštěvě hra použije češtinu pro český nebo slovenský prohlížeč, jinak angličtinu.
+Čas běží sám: jedna hodina krize trvá 5 sekund, celá krize 72 hodin. Hru můžete pozastavit (mezerník) nebo zrychlit (1/2/3). Naléhavé krize hru samy pozastaví.
 
-*The game is available in Czech and English. Pick the language on the start screen or switch any time with the EN/CZ button in the top right.*
+- **Depeše** přicházejí automaticky: požadavky spojenců, nabídky neutrálních zemí, ultimáta soupeře a světové krize. Většina má lhůtu. Když ji nestihnete, použije se výchozí reakce.
+- **Státy** mají vztah k USA i k soupeři, důvěru, povahu (jestřáb, holubice, pragmatik, oportunista) a skryté zájmy (ekonomika, bezpečnost, energie, prestiž). Rozhovorem zjistíte, co chtějí.
+- **Diplomatické tahy:** rozhovor, šest typů nabídek, návrh aliance, nátlak a žádosti o sankce, zprostředkování nebo nasazení sil.
+- **Horká linka se soupeřem:** příměří, tajný kanál, ultimátum, ústupek a sankce.
+- **Domácí scéna a armáda:** projevy, briefingy, ropné rezervy, DEFCON, letadlové lodě, kybernetické operace a omezený úder.
+- **Politický kapitál** platí za každý tah a obnovuje se podle podpory doma.
+- **Koalice proti bloku:** síla koalice určuje odstrašení. Spojenci mohou odejít, neutrální státy přeběhnout k soupeři.
+- **Hlasování v OSN** v 24. hodině odmění, kolik zemí máte na své straně.
 
-## Scénáře a obtížnost
+**Vítězství:** dotlačte soupeře k mírové konferenci. Jeho ochota jednat musí dosáhnout 70, eskalace klesnout pod 40 a potřebujete dva kroky k míru. Na konferenci pak volíte tvrdé podmínky, kompromis, nebo ústupky.
 
-- **Odvetný řetězec:** Rusko útočí na americká raketová sila. Ubráníte se a zastavíte eskalaci?
-- **Tichý úder:** útok ruských ponorek z blízkosti pobřeží, varovací doba jen kolem 10 minut.
-- **Podzim 83:** systém hlásí útok, ale je skutečný? Vyhrajete zdrženlivostí.
+**Prohra:** eskalace 100 znamená jadernou válku. Krizi prohrajete i ztrátou podpory, prestiže nebo ekonomiky. Po 72 hodinách bez dohody končí krize zamrzlým konfliktem.
 
-Obtížnost Kadet, Velitel nebo Veterán mění velikost vln, počet falešných poplachů a spolehlivost interceptorů.
+## Scénáře
 
-## Co můžete dělat
+- **Baltský záblesk:** Rusko odpálilo varovnou jadernou zbraň nad Baltem.
+- **Tichomořská blokáda:** Čína blokuje Tchaj-wan a soupeřem je Peking.
+- **Puč v Moskvě:** generálové ovládli část jaderných sil a situace je nevyzpytatelná.
 
-- **Kontakty:** ověřování přes 3 kanály, výběr na mapě nebo v seznamu, střelba nejlepším dostupným prostředkem.
-- **Obrana:** GMD (Fort Greely, Vandenberg), torpédoborce Aegis se střelami SM-3, které lze přesouvat mezi stanovišti, a stíhači F-22 proti bombardérům.
-- **Strategické síly:** DEFCON, poplachový vzlet bombardérů, vyplutí ponorek z přístavů a letoun E-6B TACAMO pro spojení s ponorkami.
-- **Zpravodajství:** satelitní průzkum s předpovědí další vlny, odposlech zrychlující ověřování, kybernetická operace a síť radarů, jejíž ztráta zkracuje varovací dobu.
-- **Diplomacie:** horká linka se čtyřmi přístupy, konzultace NATO, britské a francouzské ponorky a zprostředkování Číny.
-- **Civilní ochrana:** varování EAS pro města, celostátní poplach, evakuace prezidenta a viceprezidenta, projev k národu, Národní garda a týmy FEMA proti radioaktivnímu spadu.
-- **Odveta:** plánovač úderu s výběrem cílů a nosičů (ICBM, SLBM, bombardéry, které lze odvolat), odhad dopadů a autorizace kódem z obálky SAS.
-- **Rozhodovací karty:** během hry vyskakují dilemata, například použít, nebo ztratit sila, neautorizovaný start nebo hrozbu elektromagnetického impulzu.
-
-Na konci směny dostanete hlášení s grafem průběhu a skóre. Tabulka nejlepších výsledků se ukládá v prohlížeči.
-
-Klávesy: mezerník pauza, 1/2/3 rychlost, V ověřit, J/K další a předchozí kontakt, G nejlepší interceptor. Mapu lze přibližovat kolečkem a posouvat tažením.
+Obtížnost Kadet, Velitel nebo Veterán mění agresivitu soupeře, množství požadavků a obnovu kapitálu.
 
 ## Struktura
 
 - `index.html`: rozvržení
 - `css/style.css`: vzhled
+- `js/util.js`: jazyk, formátování
 - `js/i18n.js`: statické texty v obou jazycích
-- `js/data.js`: mapa, základny, scénáře
-- `js/sim.js`: simulace
-- `js/events.js`: rozhodovací karty
-- `js/map.js`: vykreslování mapy
-- `js/ui.js`: panely a obrazovky
-- `js/main.js`: start a herní smyčka
+- `js/data.js`: státy, nabídky, scénáře
+- `js/content.js`: depeše, krize, scénářové události
+- `js/sim.js`: simulace, umělá inteligence států, tahy hráče
+- `js/ui.js`: vykreslování panelů a závěrečné zprávy
+- `js/main.js`: start, herní smyčka, klávesy
 
-Fiktivní simulace. Čísla a postupy jsou zjednodušené a neodpovídají skutečným plánům.
+Fiktivní simulace. Postavy, čísla a události jsou smyšlené a zjednodušené.

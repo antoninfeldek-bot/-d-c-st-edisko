@@ -3,156 +3,43 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Velín Cheyenne Mountain</title>
+<title>Krizový štáb</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Saira+Condensed:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Saira+Condensed:wght@500;600;700&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="app">
   <header class="top">
-    <div class="brand"><span data-i18n="brand">Velín Cheyenne Mountain</span><small id="scenName">NORAD · USNORTHCOM · STRATCOM</small></div>
+    <div class="brand"><span data-i18n="brand">Krizový štáb</span><small id="scenName">Situation Room · Washington</small></div>
+    <div class="stat clock"><label id="dayLbl">Den 1</label><div class="v" id="clock">03:00</div><small id="hLeft"></small></div>
     <div class="stat"><label>DEFCON</label><div class="defcon" id="defcon"><span data-l="5">5</span><span data-l="4">4</span><span data-l="3">3</span><span data-l="2">2</span><span data-l="1">1</span></div></div>
-    <div class="stat"><label data-i18n="since">Čas od detekce</label><div class="v" id="clock">T+00:00:00</div></div>
-    <div class="stat"><label>Zulu</label><div class="v" id="zulu">03:12Z</div></div>
-    <div class="stat"><label><span data-i18n="esc">Eskalace</span> <b id="escVal">0</b></label><div class="meter" data-i18n-title="escTip"><i id="escBar"></i><span class="mark" style="left:20%"></span></div></div>
-    <div class="stat"><label><span data-i18n="cred">Odstrašení</span> <b id="credVal">0</b></label><div class="meter cred" data-i18n-title="credTip"><i id="credBar"></i><span class="mark" style="left:40%"></span></div></div>
-    <div class="stat"><label><span data-i18n="order">Veřejný pořádek</span> <b id="orderVal">0</b></label><div class="meter order" data-i18n-title="orderTip"><i id="orderBar"></i></div></div>
-    <div class="stat"><label data-i18n="cas">Ztráty USA</label><div class="v red" id="casVal">0</div></div>
-    <div class="stat"><label data-i18n="command">Velení</label><div class="v sm" id="leaderVal">—</div></div>
+    <div class="meters" id="meters"></div>
+    <div class="stat pk"><label data-i18n="capital">Politický kapitál</label><div class="v" id="pkVal">0</div></div>
     <div class="ctrl">
-      <button class="btn" id="bPause" data-i18n-title="pauseTip" data-i18n="pause">Pauza</button>
+      <button class="btn" id="bPause" data-i18n="pause" data-i18n-title="pauseTip">Pauza</button>
       <button class="btn spd on" data-s="1">1×</button>
-      <button class="btn spd" data-s="3">3×</button>
-      <button class="btn spd" data-s="6">6×</button>
+      <button class="btn spd" data-s="2">2×</button>
+      <button class="btn spd" data-s="4">4×</button>
+      <button class="btn" id="bAuto" data-i18n-title="autoTip">Auto-pauza</button>
       <button class="btn" id="bSound" data-i18n="sound">Zvuk: zap</button>
       <button class="btn" id="bLang" data-i18n-title="langTip">EN</button>
     </div>
   </header>
 
   <div class="main">
-    <section class="panel">
-      <h2><span data-i18n="contacts">Sledované kontakty</span> <span id="trkCount"></span></h2>
-      <div class="sub-h"><span id="verifyCap"></span><span id="confirmInfo"></span></div>
-      <div class="list" id="trkList"><div class="empty" id="trkEmpty" data-i18n="noContacts">Žádné kontakty.</div></div>
-      <h2><span data-i18n="cities">Města · varování EAS</span> <span id="femaCount">FEMA 4</span></h2>
-      <div class="list" id="cityList"></div>
+    <section class="panel" aria-labelledby="inboxH">
+      <h2 id="inboxH"><span data-i18n="inbox">Depeše</span> <span id="inboxCount"></span></h2>
+      <div class="list" id="inbox"></div>
     </section>
 
-    <section class="map" id="mapWrap" data-i18n-aria="mapAria">
-      <canvas id="map"></canvas>
-      <div class="maphead" data-i18n="mapHead">Azimutální projekce · severní pól</div>
-      <div class="forecast" id="forecast" hidden></div>
-      <div class="zoom">
-        <button class="btn" id="zIn" data-i18n-aria="zIn">+</button>
-        <button class="btn" id="zOut" data-i18n-aria="zOut">−</button>
-        <button class="btn" id="zUS" data-i18n-aria="zUS" data-i18n-title="zUS">US</button>
-        <button class="btn" id="zReset" data-i18n-aria="zReset" data-i18n-title="zReset">⟲</button>
-      </div>
-      <div class="legend">
-        <div><i style="border-top-style:dashed;border-color:var(--amber)"></i><span data-i18n="lgU">Neověřený kontakt</span></div>
-        <div><i style="border-color:var(--red)"></i><span data-i18n="lgC">Potvrzená hrozba</span></div>
-        <div><i style="border-color:var(--cyan)"></i><span data-i18n="lgO">Vlastní síly · ◆ torpédoborec</span></div>
-        <div><i style="border-color:var(--dim)"></i><span data-i18n="lgF">Falešný / zničený</span></div>
-      </div>
-    </section>
+    <section class="panel center" id="center" aria-live="polite"></section>
 
-    <section class="panel">
-      <nav class="tabs" role="tablist">
-        <button class="tab on" data-tab="kontakt" role="tab" data-i18n="tabK">Kontakt</button>
-        <button class="tab" data-tab="sily" role="tab" data-i18n="tabS">Síly</button>
-        <button class="tab" data-tab="intel" role="tab" data-i18n="tabI">Zprav.</button>
-        <button class="tab" data-tab="dipl" role="tab" data-i18n="tabD">Diplom.</button>
-        <button class="tab" data-tab="civil" role="tab" data-i18n="tabC">Civil</button>
-        <button class="tab" data-tab="odveta" role="tab" data-i18n="tabO">Odveta</button>
-      </nav>
-
-      <div class="pane" data-pane="kontakt">
-        <div class="sec">
-          <div class="kv"><span class="detail-id" id="dId">—</span><span class="chip" id="dChip" hidden></span></div>
-          <div class="kv"><span data-i18n="type">Typ</span><b id="dKind">—</b></div>
-          <div class="kv"><span data-i18n="origin">Původ</span><b id="dFrom">—</b></div>
-          <div class="kv"><span data-i18n="target">Pravděpodobný cíl</span><b id="dTgt">—</b></div>
-          <div class="kv"><span data-i18n="tti">Čas do dopadu</span><b id="dEta">—</b></div>
-          <p class="hint" id="dHint" hidden></p>
-          <div class="row">
-            <button class="btn" id="bVerify" title="V" data-i18n="verify">Ověřit</button>
-            <button class="btn" id="bPrev" title="K" data-i18n="prev">◂ Předchozí</button>
-            <button class="btn" id="bNext" title="J" data-i18n="next">Další ▸</button>
-          </div>
-          <p class="note" id="dNote"></p>
-        </div>
-        <h3 class="ph" data-i18n="engage">Prostředky k zásahu</h3>
-        <div class="sec" id="shooters"></div>
-      </div>
-
-      <div class="pane" data-pane="sily" hidden>
-        <h3 class="ph" data-i18n="readiness">Pohotovost</h3>
-        <div class="sec">
-          <div class="kv"><span data-i18n="readinessLvl">Stupeň pohotovosti</span><b id="defStat">DEFCON 3</b></div>
-          <div class="row"><button class="btn" id="bDefUp" data-i18n="defUp">Zvýšit (DEFCON −1)</button><button class="btn" id="bDefDown" data-i18n="defDown">Snížit</button></div>
-          <p class="note" data-i18n="defNote"></p>
-        </div>
-        <h3 class="ph" data-i18n="bmd">Protiraketová obrana</h3>
-        <div class="sec" id="defList"></div>
-        <h3 class="ph" data-i18n="aegis">Torpédoborce Aegis</h3>
-        <div class="sec" id="shipList"></div>
-        <h3 class="ph" data-i18n="triad">Strategické síly</h3>
-        <div class="sec" id="triad"></div>
-      </div>
-
-      <div class="pane" data-pane="intel" hidden>
-        <h3 class="ph" data-i18n="ops">Operace</h3>
-        <div class="sec" id="intelOps"></div>
-        <h3 class="ph" data-i18n="radars">Síť radarů včasné výstrahy</h3>
-        <div class="sec" id="radarList"></div>
-      </div>
-
-      <div class="pane" data-pane="dipl" hidden>
-        <h3 class="ph" data-i18n="hotline">Horká linka Washington–Moskva</h3>
-        <div class="sec">
-          <div class="kv"><span data-i18n="lineStatus">Stav linky</span><b id="hotStat"></b></div>
-          <div class="choice-list" id="hotList"></div>
-        </div>
-        <h3 class="ph" data-i18n="allies">Spojenci a prostředníci</h3>
-        <div class="sec" id="dipList"></div>
-        <h3 class="ph" data-i18n="truce">Cesta k příměří</h3>
-        <div class="sec"><div class="req" id="truceReq"></div></div>
-      </div>
-
-      <div class="pane" data-pane="civil" hidden>
-        <h3 class="ph" data-i18n="cog">Kontinuita vlády</h3>
-        <div class="sec" id="cogList"></div>
-        <h3 class="ph" data-i18n="pop">Obyvatelstvo</h3>
-        <div class="sec" id="civList"></div>
-      </div>
-
-      <div class="pane" data-pane="odveta" hidden>
-        <div class="sec"><div class="req" id="retReq"></div></div>
-        <h3 class="ph" data-i18n="st1">1 · Cíle</h3>
-        <div class="sec" id="setList"></div>
-        <h3 class="ph" data-i18n="st2">2 · Nosiče</h3>
-        <div class="sec" id="platList"></div>
-        <h3 class="ph" data-i18n="st3">3 · Autorizace</h3>
-        <div class="sec">
-          <div class="preview" id="preview"></div>
-          <div class="sas">
-            <button class="btn" id="bSas" data-i18n="sas">Rozlomit obálku SAS</button>
-            <code id="sasCode" hidden>····</code>
-            <label class="note" for="retCode" data-i18n="sasLbl">Autentizační kód z obálky</label>
-            <input id="retCode" maxlength="4" autocomplete="off" spellcheck="false" placeholder="____">
-          </div>
-          <button class="btn danger big" id="bStrike" data-i18n="strike">Autorizovat jaderný úder</button>
-          <p class="note" id="strikeNote"></p>
-        </div>
-        <h3 class="ph" data-i18n="bombers">Bombardéry na cestě</h3>
-        <div class="sec">
-          <div class="kv"><span data-i18n="bomberStrikes">Údery bombardérů</span><b id="bombStat"></b></div>
-          <button class="btn" id="bRecall" data-i18n="recall">Odvolat bombardéry</button>
-        </div>
-      </div>
+    <section class="panel" aria-labelledby="worldH">
+      <h2 id="worldH"><span data-i18n="world">Státy</span> <button class="linkbtn" data-view="overview" data-i18n="overview">Přehled</button></h2>
+      <div id="world"></div>
     </section>
   </div>
 
@@ -162,8 +49,8 @@
 <!-- start / end screen -->
 <div class="ovl" id="ovl">
   <div class="brief" id="brief">
-    <p class="eyebrow">NORAD · Cheyenne Mountain · 16. 10. · 03:12 Z</p>
-    <h1 data-i18n="brand">Velín Cheyenne Mountain</h1>
+    <p class="eyebrow" data-i18n="eyebrow">Bílý dům · Situation Room · Tajné</p>
+    <h1 data-i18n="brand">Krizový štáb</h1>
     <p data-i18n="intro"></p>
     <div class="pick">
       <h3 data-i18n="language">Jazyk</h3>
@@ -180,30 +67,18 @@
       <summary data-i18n="howto">Jak hrát</summary>
       <ul class="rules" data-i18n-html="rules"></ul>
     </details>
-    <button class="btn primary" id="startBtn" data-i18n="take">Převzít velení</button>
+    <button class="btn primary" id="startBtn" data-i18n="take">Převzít krizový štáb</button>
     <div id="scoresStart"></div>
     <p class="fine" data-i18n="fine"></p>
-  </div>
-</div>
-
-<!-- decision card -->
-<div class="ovl" id="cardOvl" hidden>
-  <div class="brief card" role="dialog" aria-modal="true" aria-labelledby="cardTitle">
-    <p class="eyebrow" id="cardTag"></p>
-    <h2 class="card-title" id="cardTitle"></h2>
-    <p id="cardText"></p>
-    <div class="choice-list" id="cardChoices"></div>
-    <p class="fine" data-i18n="paused">Čas je pozastaven, dokud nerozhodnete.</p>
   </div>
 </div>
 
 <script src="js/util.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/data.js"></script>
+<script src="js/content.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/sim.js"></script>
-<script src="js/events.js"></script>
-<script src="js/map.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/main.js"></script>
 </body>
