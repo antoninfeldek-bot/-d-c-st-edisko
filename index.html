@@ -1,0 +1,1030 @@
+<title>Velín Cheyenne Mountain</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Saira+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: three-column operations console (contacts | polar radar map | assets & decisions) above a teletype log */
+:root{
+  --bg:#090d12; --panel:#0f161d; --panel2:#152029; --line:#22313e; --fg:#d5dfe5; --dim:#7b8e9a;
+  --ocean:#0c141b; --land:#15212b; --coast:#2d4354;
+  --amber:#ffb03a; --red:#ff4d3f; --cyan:#62d2e3; --ok:#86d394;
+  --display:"Saira Condensed","Arial Narrow",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--mono);font-size:13px}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.app{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) 140px;gap:8px;padding-block:8px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* top bar */
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 26px;background:var(--panel);border:1px solid var(--line);padding:8px 14px}
+.brand{font-family:var(--display);font-weight:700;font-size:21px;letter-spacing:.05em;text-transform:uppercase;line-height:1}
+.brand small{display:block;font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.14em;color:var(--dim);margin-top:3px}
+.stat{display:grid;gap:3px}
+.stat label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.stat .v{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+.defcon{display:flex;gap:3px}
+.defcon span{width:25px;height:25px;display:grid;place-items:center;border:1px solid var(--line);color:var(--dim);font-family:var(--display);font-weight:700;font-size:16px}
+.defcon span.on[data-l="3"]{background:var(--amber);color:var(--bg);border-color:var(--amber)}
+.defcon span.on[data-l="2"]{background:var(--red);color:var(--bg);border-color:var(--red)}
+.defcon span.on[data-l="1"]{background:var(--fg);color:var(--red);border-color:var(--fg)}
+.meter{width:110px;height:6px;background:var(--line);position:relative}
+.meter i{position:absolute;inset:0 auto 0 0;background:var(--amber)}
+.meter.cred i{background:var(--cyan)}
+.meter .mark{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--fg);opacity:.6}
+.ctrl{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+
+/* panels */
+.main{display:grid;grid-template-columns:290px minmax(0,1fr) 340px;gap:8px;min-height:0}
+.panel{background:var(--panel);border:1px solid var(--line);min-height:0;overflow:auto;display:flex;flex-direction:column}
+.panel h2{margin:0;position:sticky;top:0;z-index:2;background:var(--panel);border-bottom:1px solid var(--line);padding:8px 12px;
+  font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);display:flex;justify-content:space-between;gap:8px}
+.panel h2 span{font-family:var(--mono);font-size:11px;letter-spacing:.04em}
+.sec{padding:10px 12px;border-bottom:1px solid var(--line);display:grid;gap:8px}
+.sec h3{margin:0;font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.kv{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.kv span:first-child{color:var(--dim)}
+.kv b{font-weight:500;text-align:right;font-variant-numeric:tabular-nums}
+.row{display:flex;gap:6px;flex-wrap:wrap}
+.note{font-size:11px;color:var(--dim);line-height:1.45;margin:0}
+
+.btn{font:inherit;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--panel2);color:var(--fg);
+  border:1px solid var(--line);padding:6px 10px;cursor:pointer}
+.btn:hover:not(:disabled){border-color:var(--amber);color:var(--amber)}
+.btn:disabled{opacity:.38;cursor:not-allowed}
+.btn.on{border-color:var(--amber);color:var(--amber)}
+.btn.danger{border-color:var(--red);color:var(--red)}
+.btn.danger:hover:not(:disabled){background:var(--red);color:var(--bg);border-color:var(--red)}
+:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+
+/* contacts */
+.list{display:flex;flex-direction:column}
+.trk{display:grid;grid-template-columns:auto 1fr auto;gap:3px 8px;align-items:baseline;width:100%;text-align:left;background:none;color:var(--fg);
+  font:inherit;border:0;border-bottom:1px solid var(--line);border-left:3px solid transparent;padding:7px 10px;cursor:pointer}
+.trk:hover{background:var(--panel2)}
+.trk.sel{background:var(--panel2);outline:1px solid var(--amber);outline-offset:-1px}
+.trk .id{font-weight:600}
+.trk .kd{color:var(--dim);font-size:11px}
+.trk .eta{font-variant-numeric:tabular-nums;text-align:right}
+.trk .tg{grid-column:1/3;color:var(--dim);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip{font-size:9.5px;letter-spacing:.08em;padding:1px 5px;border:1px solid currentColor;justify-self:end;white-space:nowrap}
+.st-unverified{border-left-color:var(--amber)} .st-unverified .chip,.st-verifying .chip{color:var(--amber)}
+.st-verifying{border-left-color:var(--amber)}
+.st-confirmed{border-left-color:var(--red)} .st-confirmed .chip{color:var(--red)}
+.st-false,.st-destroyed,.st-impact{opacity:.55}
+.st-destroyed .chip{color:var(--ok)} .st-impact .chip{color:var(--red)} .st-false .chip{color:var(--dim)}
+.empty{padding:14px 12px;color:var(--dim);font-size:12px;line-height:1.5}
+
+.city{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;padding:6px 12px;border-bottom:1px solid var(--line)}
+.city .nm{font-weight:500}
+.city .sub{grid-column:1;color:var(--dim);font-size:11px}
+.city .btn{grid-row:1/3;grid-column:2;padding:4px 8px;font-size:10.5px}
+.city.hit .nm{color:var(--red)}
+.city.warned .sub{color:var(--ok)}
+
+/* map */
+.map{position:relative;border:1px solid var(--line);background:var(--bg);min-height:0;overflow:hidden}
+.map canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:none}
+.legend{position:absolute;left:10px;bottom:10px;display:grid;gap:4px;font-size:10.5px;color:var(--dim);background:color-mix(in srgb,var(--bg) 80%,transparent);padding:7px 9px;border:1px solid var(--line);pointer-events:none}
+.legend i{display:inline-block;width:18px;height:0;border-top:2px solid;vertical-align:middle;margin-right:6px}
+.zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:4px}
+.zoom .btn{width:30px;padding:4px 0;font-size:14px}
+.maphead{position:absolute;left:10px;top:9px;font-size:10px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;pointer-events:none}
+
+/* detail */
+.detail-id{font-family:var(--display);font-size:26px;font-weight:700;letter-spacing:.04em;line-height:1}
+.sas{display:grid;gap:6px;border:1px dashed var(--line);padding:8px}
+.sas code{font-size:18px;letter-spacing:.3em;color:var(--amber)}
+.sas input{font:inherit;font-size:15px;letter-spacing:.3em;text-transform:uppercase;width:100%;background:var(--bg);color:var(--fg);border:1px solid var(--line);padding:6px 8px}
+.req{display:grid;gap:2px;font-size:11px}
+.req .y{color:var(--ok)} .req .n{color:var(--dim)}
+
+/* log */
+.logwrap{background:var(--panel);border:1px solid var(--line);overflow:auto;min-height:0}
+.log{list-style:none;margin:0;padding:4px 0}
+.log li{display:grid;grid-template-columns:86px 1fr;gap:10px;padding:2px 12px;font-size:12px;line-height:1.45}
+.log time{color:var(--dim);font-variant-numeric:tabular-nums}
+.log .warn span{color:var(--amber)} .log .crit span{color:var(--red)} .log .ok span{color:var(--ok)} .log .own span{color:var(--cyan)}
+.log li:first-child{background:var(--panel2)}
+
+/* overlay */
+.ovl{position:fixed;inset:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);display:grid;place-items:center;overflow:auto;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.brief{max-width:660px;width:100%;background:var(--panel);border:1px solid var(--line);padding:26px 28px;display:grid;gap:14px}
+.eyebrow{margin:0;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber)}
+.brief h1{margin:0;font-family:var(--display);font-size:clamp(30px,6vw,44px);font-weight:700;text-transform:uppercase;letter-spacing:.03em;line-height:1;text-wrap:balance}
+.brief p{margin:0;line-height:1.6;max-width:62ch}
+.rules{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:12px;line-height:1.5}
+.rules li{padding-left:16px;position:relative}
+.rules li::before{content:"›";position:absolute;left:0;color:var(--amber)}
+.rules b{color:var(--fg);font-weight:600}
+.brief .btn{justify-self:start;font-size:13px;padding:10px 18px;border-color:var(--amber);color:var(--amber)}
+.fine{font-size:11px;color:var(--dim)}
+.report{display:grid;grid-template-columns:1fr auto;gap:4px 18px;font-size:12.5px}
+.report span:nth-child(odd){color:var(--dim)}
+.report span:nth-child(even){text-align:right;font-variant-numeric:tabular-nums}
+.verdict{font-family:var(--display);font-size:28px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+
+@media (max-width:1100px){
+  html,body{height:auto}
+  .app{height:auto;grid-template-rows:auto}
+  .main{grid-template-columns:1fr}
+  .map{order:-1;height:min(78vw,640px)}
+  .panel{max-height:none}
+  .logwrap{height:180px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">Velín Cheyenne Mountain<small>NORAD · USNORTHCOM · STRATCOM</small></div>
+    <div class="stat"><label>DEFCON</label><div class="defcon" id="defcon"><span data-l="5">5</span><span data-l="4">4</span><span data-l="3">3</span><span data-l="2">2</span><span data-l="1">1</span></div></div>
+    <div class="stat"><label>Čas od detekce</label><div class="v" id="clock">T+00:00:00</div></div>
+    <div class="stat"><label>Zulu</label><div class="v" id="zulu">03:12Z</div></div>
+    <div class="stat"><label>Eskalace <span id="escVal">35</span></label><div class="meter" title="Ochota protivníka pokračovat v útocích"><i id="escBar"></i><span class="mark" style="left:20%"></span></div></div>
+    <div class="stat"><label>Odstrašení <span id="credVal">70</span></label><div class="meter cred" title="Věrohodnost americké odvety"><i id="credBar"></i><span class="mark" style="left:40%"></span></div></div>
+    <div class="stat"><label>Ztráty USA (odhad)</label><div class="v" id="casVal" style="color:var(--red)">0</div></div>
+    <div class="ctrl">
+      <button class="btn" id="bPause" title="Mezerník">Pauza</button>
+      <button class="btn spd on" data-s="1">1×</button>
+      <button class="btn spd" data-s="3">3×</button>
+      <button class="btn spd" data-s="6">6×</button>
+      <button class="btn" id="bSound">Zvuk: zap</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <section class="panel" aria-label="Sledované kontakty">
+      <h2>Sledované kontakty <span id="trkCount">0 aktivních</span></h2>
+      <div class="list" id="trkList"><div class="empty" id="trkEmpty">Žádné kontakty. Satelity SBIRS a radary včasné výstrahy jsou v pohotovosti.</div></div>
+      <h2>Varování obyvatel (EAS)</h2>
+      <div class="list" id="cityList"></div>
+    </section>
+
+    <section class="map" id="mapWrap" aria-label="Situační mapa">
+      <canvas id="map"></canvas>
+      <div class="maphead">Azimutální projekce · severní pól</div>
+      <div class="zoom"><button class="btn" id="zIn" aria-label="Přiblížit">+</button><button class="btn" id="zOut" aria-label="Oddálit">−</button><button class="btn" id="zReset" aria-label="Výchozí pohled" style="font-size:10px">⟲</button></div>
+      <div class="legend">
+        <div><i style="border-top-style:dashed;border-color:var(--amber)"></i>Neověřený kontakt</div>
+        <div><i style="border-color:var(--red)"></i>Potvrzená hrozba</div>
+        <div><i style="border-color:var(--cyan)"></i>Vlastní prostředky</div>
+        <div><i style="border-color:var(--dim)"></i>Falešný / zničený</div>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Velení">
+      <h2>Vybraný kontakt</h2>
+      <div class="sec" id="detail">
+        <div class="kv"><span class="detail-id" id="dId">—</span><span class="chip" id="dChip" hidden></span></div>
+        <div class="kv"><span>Typ</span><b id="dKind">—</b></div>
+        <div class="kv"><span>Původ</span><b id="dFrom">—</b></div>
+        <div class="kv"><span>Pravděpodobný cíl</span><b id="dTgt">—</b></div>
+        <div class="kv"><span>Čas do dopadu</span><b id="dEta">—</b></div>
+        <div class="row">
+          <button class="btn" id="bVerify" title="V">Ověřit</button>
+          <button class="btn" id="bGmd1" title="G">GMD ×1</button>
+          <button class="btn" id="bGmd2" title="H">GMD ×2</button>
+          <button class="btn" id="bFight" title="F">Stíhači</button>
+        </div>
+        <p class="note" id="dNote">Vyberte kontakt v seznamu nebo na mapě.</p>
+      </div>
+
+      <h2>Prostředky</h2>
+      <div class="sec">
+        <div class="kv"><span>GMD Fort Greely</span><b id="aGreely">12 / 12</b></div>
+        <div class="kv"><span>GMD Vandenberg</span><b id="aVafb">4 / 4</b></div>
+        <div class="kv"><span>Stíhači F-22 (Elmendorf)</span><b id="aFight">6 letek</b></div>
+        <div class="kv"><span>Raketová pole ICBM</span><b id="aSilos">3 / 3</b></div>
+      </div>
+
+      <h2>Velení a diplomacie</h2>
+      <div class="sec">
+        <div class="kv"><span>Prezident</span><b id="potusStat">Bílý dům</b></div>
+        <button class="btn" id="bEvac">Evakuovat prezidenta do E-4B</button>
+        <div class="kv"><span>Stupeň pohotovosti</span><b id="defStat">DEFCON 3</b></div>
+        <div class="row"><button class="btn" id="bDefUp">Zvýšit (DEFCON −1)</button><button class="btn" id="bDefDown">Snížit</button></div>
+        <div class="kv"><span>Horká linka Moskva</span><b id="hotStat">Nenavázána</b></div>
+        <button class="btn" id="bHot">Volat přes horkou linku</button>
+      </div>
+
+      <h2>Jaderná odveta</h2>
+      <div class="sec">
+        <div class="req" id="retReq"></div>
+        <div class="sas">
+          <button class="btn" id="bSas">Rozlomit obálku SAS</button>
+          <code id="sasCode" hidden>····</code>
+          <label class="note" for="retCode">Zadejte autentizační kód z obálky</label>
+          <input id="retCode" maxlength="4" autocomplete="off" spellcheck="false" placeholder="____">
+        </div>
+        <div class="row">
+          <button class="btn danger" id="bLimited">Omezený úder</button>
+          <button class="btn danger" id="bFull">Plný protiúder</button>
+        </div>
+        <p class="note">Omezený úder míří na odpalovací základny. Plný protiúder zasáhne i průmyslová centra. Obojí zvyšuje eskalaci a vyvolá další vlnu útoků.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="logwrap" aria-label="Hlášení"><ol class="log" id="log" reversed></ol></section>
+</div>
+
+<div class="ovl" id="ovl">
+  <div class="brief" id="brief">
+    <p class="eyebrow">NORAD · Cheyenne Mountain · 16. 10. · 03:12 Z</p>
+    <h1>Velín Cheyenne Mountain</h1>
+    <p>Po týdnu napětí na hranici NATO zachytily satelity SBIRS starty balistických raket z území Ruska. Jste velitel směny. Během příštích 90 minut rozhodujete o obraně, varování obyvatel a o tom, jestli konflikt přeroste v totální výměnu, nebo skončí příměřím.</p>
+    <ul class="rules">
+      <li><b>Ověřujte kontakty.</b> Část hlášení jsou falešné poplachy. Ověření trvá 90 s, pozemní radary potvrdí cíl samy až 8 minut před dopadem.</li>
+      <li><b>Interceptory GMD</b> zasahují jen ICBM, potřebují DEFCON 2 a nejméně 5 minut do dopadu. Zásah má pravděpodobnost 55 %.</li>
+      <li><b>Varujte města</b> přes EAS. Čím dřív, tím menší ztráty.</li>
+      <li><b>Evakuujte prezidenta</b> včas. Zásah Washingtonu bez evakuace znamená ztrátu velení.</li>
+      <li><b>Příměří</b> nastane, když po dvou úspěšných hovorech horkou linkou klesne eskalace pod 20 a odstrašení zůstane aspoň 40.</li>
+      <li><b>Odveta</b> vyžaduje DEFCON 1 a kód z obálky SAS. Zvedne odstrašení, ale i eskalaci.</li>
+      <li>Klávesy: mezerník pauza, 1/2/3 rychlost, V ověřit, G/H interceptor, F stíhači.</li>
+    </ul>
+    <button class="btn" id="startBtn">Převzít velení</button>
+    <p class="fine">Fiktivní simulace. Čísla a postupy jsou zjednodušené a neodpovídají skutečným plánům.</p>
+  </div>
+</div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const DEG = Math.PI / 180;
+const rand = (a, b) => a + Math.random() * (b - a);
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const GAME_PER_SEC = 10;          // game seconds per real second at 1×
+const END_T = 90 * 60;
+
+/* ---------- geography (coarse) ---------- */
+const LAND = [
+  [[71,-156],[70,-141],[69,-133],[68,-115],[67,-108],[68,-98],[66,-87],[70,-85],[73,-80],[70,-68],[66,-62],[60,-64],[56,-61],[52,-56],[47,-53],[46,-60],[44,-66],[42,-70],[41,-72],[40,-74],[37,-76],[35,-75.5],[32,-80],[30,-81],[27,-80],[25,-80.5],[27,-82.5],[30,-84],[30,-89],[29,-94],[26,-97],[22,-97.8],[19,-96],[18,-94],[21,-90],[21,-87],[18,-88],[16,-88],[15,-84],[11,-83.5],[9,-79],[8,-77],[7,-78],[9,-80],[8,-83],[13,-88],[16,-95],[19,-105],[23,-106],[27,-111],[31,-113],[24,-110],[23,-110],[27,-114],[32,-117],[34,-119],[35,-121],[38,-123],[40,-124],[43,-124.5],[46,-124],[48,-124.7],[50,-128],[54,-131],[58,-136],[60,-141],[60,-147],[59,-152],[57,-157],[55,-162],[58,-162],[61,-166],[64,-165],[66,-168],[68,-166],[71,-156]],
+  [[60,-44],[61,-48],[65,-52],[69,-51],[71,-55],[75,-58],[77,-68],[79,-72],[82,-62],[83.5,-40],[82,-22],[79,-18],[75,-19],[71,-22],[68,-30],[65,-38],[62,-42],[60,-44]],
+  [[63,-65],[66,-62],[70,-68],[73,-78],[71,-86],[68,-80],[64,-78],[62,-72],[63,-65]],
+  [[76,-80],[79,-75],[82,-65],[83,-75],[80,-95],[77,-95],[76,-80]],
+  [[69,-105],[70,-118],[73,-118],[73,-105],[69,-105]],
+  [[63.5,-22],[64,-14],[65.5,-13.5],[66.5,-16],[66,-23],[65,-24],[63.5,-22]],
+  [[50,-5.5],[51,1.5],[53,0.5],[55,-1.5],[57.5,-1.8],[58.6,-3],[58.5,-5],[56,-6],[54.5,-3.4],[53,-4.6],[51.5,-5],[50,-5.5]],
+  [[51.5,-9.8],[54,-10],[55.3,-7.5],[54,-6],[52,-6.3],[51.5,-9.8]],
+  [[58,6],[59,10],[59,11.5],[56,12.5],[55.5,14],[58,16.5],[61,17],[63.5,20],[65.7,22.5],[67,24],[69,28],[71,26],[71,24],[70,19],[68,15],[66,13],[64,10],[62,5],[60,5],[58,6]],
+  [[36,-6],[43,-9],[43.5,-1.5],[46.5,-1.5],[48.5,-4.7],[49.5,0],[51,2],[53.5,5],[54,8.5],[54,11],[54.5,14],[54.5,19],[57,21],[59.5,24],[60.5,29],[65,34],[66.5,33],[66,40],[68,44],[68.5,54],[69,60],[73,70],[70,73],[72.5,80],[74,87],[76,100],[77.5,105],[74,113],[73,120],[72,130],[71,140],[71,152],[70,160],[69.5,170],[67,-175],[65.5,-170],[64.5,-173],[62,179],[60,170],[57,163],[51,156.5],[57,156],[59.5,154],[59,143],[54,137],[53,141],[48,140],[43,135],[40,129],[38,128.5],[35,129],[34.5,126.5],[37.5,126.5],[39,125],[39,121.5],[40.5,122],[37.5,119],[35,119.5],[32,121.5],[30,122],[25,119.5],[22,114],[21.5,108],[19,106],[16,108],[11,109],[9,105],[10.5,104],[13.5,100],[8,100.5],[1.3,104],[4,100.5],[8,98.3],[16.5,97.5],[16,94.5],[20.5,92.3],[22,88.5],[21,86.5],[15.5,80.2],[10,79.8],[8,77.5],[12,75],[19,72.8],[22.5,70],[23.5,68],[25,61.5],[26.5,57],[24,56.5],[22.5,59.8],[18,56.5],[15,51],[12.7,45],[13,43.3],[17,42.5],[21,39],[27.5,35],[30,32.5],[31,32],[31.5,34.5],[33,35],[36,36],[36.5,30],[37,27.5],[40,26.2],[41,26],[40.5,23],[39,20.5],[40.5,19.4],[42.5,18],[45.5,13.5],[44.5,12.3],[42,15.5],[40,18.5],[38,16],[38,15.6],[40,15.5],[41.2,13],[43,10.5],[44,8.5],[43.2,5.5],[43,3],[41.5,2.2],[39.5,-0.3],[37,-2],[36.7,-4.5],[36,-6]],
+  [[35.8,-5.9],[34,-7],[31,-9.8],[28,-13],[21,-17],[15,-17.5],[10,-15],[7,-12],[4.5,-7.5],[5,-2],[6,2],[4,6],[4.5,9],[-1,9],[-5,12],[-12,13.5],[-17,11.7],[-23,14.5],[-29,16.5],[-34.5,19.5],[-34,26],[-30,31],[-25,33],[-20,35],[-15,40.5],[-10,40],[-5,39],[-1,42],[2,45],[5,48],[10,51],[11.8,51],[11.5,43.5],[15,39.5],[19,37.5],[22,36.8],[27,34],[30,32.5],[31.5,30],[31,25],[32.5,23],[31,20],[32.5,15],[33,11],[37,10.5],[37,7],[36.8,3],[35.5,0],[35.8,-5.9]],
+  [[12,-72],[11,-75],[9,-77],[7,-78],[1,-80],[-5,-81],[-15,-75],[-10,-50],[-5,-35],[0,-50],[5,-52],[7,-58],[10,-62],[10.5,-67],[12,-72]],
+  [[31,130.5],[34,130.8],[35.5,133],[36,136],[37.5,137],[40.5,140],[41.5,140.5],[43.5,141.5],[45.5,142],[44,145],[42.5,143.5],[41.5,141],[38,141],[35,140.5],[34.5,138.5],[33.5,135.5],[33,132],[31,130.5]],
+  [[46,142],[50,142.2],[54.3,142.7],[52,143.5],[47,143.5],[46,142]],
+  [[70.5,57],[72,52],[74.5,55],[76.5,62],[77,68],[75,60],[72.5,57],[70.5,57]],
+  [[77,15],[78.5,11],[80,17],[80,27],[78,24],[77,15]],
+  [[78,100],[80,92],[81,97],[79.5,105],[78,100]],
+  [[22,-84.5],[23,-82],[23,-80],[21.5,-77],[20,-74.5],[20,-77.5],[21.5,-79],[22,-84.5]]
+];
+const WATER = [
+  [[63,-94],[60,-94],[57,-92],[55,-85],[52,-80],[56,-77],[60,-78],[62,-78],[64,-87],[63,-94]],
+  [[41.2,29],[41.7,32],[42,35],[41.5,38],[41.5,41.5],[44,39],[45.2,37],[47,38.5],[46,34],[46.5,31],[45,29.6],[43.5,28.5],[42,28],[41.2,29]],
+  [[47,51],[45,53],[42,53],[40,53],[37,54],[37,50],[39,49],[41,49],[42.5,47.5],[44.5,47],[47,49],[47,51]]
+];
+
+/* ---------- sites ---------- */
+const SITES = {
+  DC:{n:'Washington D.C.',s:'WASHINGTON',lat:38.9,lon:-77.04,type:'city',pop:6.3},
+  NYC:{n:'New York',s:'NEW YORK',lat:40.71,lon:-74.0,type:'city',pop:19.5},
+  BOS:{n:'Boston',s:'BOSTON',lat:42.36,lon:-71.06,type:'city',pop:4.9},
+  CHI:{n:'Chicago',s:'CHICAGO',lat:41.88,lon:-87.63,type:'city',pop:9.4},
+  ATL:{n:'Atlanta',s:'ATLANTA',lat:33.75,lon:-84.39,type:'city',pop:6.1},
+  HOU:{n:'Houston',s:'HOUSTON',lat:29.76,lon:-95.37,type:'city',pop:7.1},
+  DEN:{n:'Denver',s:'DENVER',lat:39.74,lon:-104.99,type:'city',pop:2.9,left:1},
+  LA:{n:'Los Angeles',s:'LOS ANGELES',lat:34.05,lon:-118.24,type:'city',pop:13.2},
+  SF:{n:'San Francisco',s:'SAN FRANCISCO',lat:37.77,lon:-122.42,type:'city',pop:4.7,left:1},
+  SEA:{n:'Seattle',s:'SEATTLE',lat:47.61,lon:-122.33,type:'city',pop:4.0},
+  MALM:{n:'Malmstrom AFB',s:'MALMSTROM',lat:47.5,lon:-111.18,type:'silo'},
+  MINOT:{n:'Minot AFB',s:'MINOT',lat:48.42,lon:-101.36,type:'silo',up:1},
+  WARREN:{n:'F. E. Warren AFB',s:'WARREN',lat:41.13,lon:-104.87,type:'silo'},
+  GREELY:{n:'Fort Greely (GMD)',s:'GREELY',lat:63.98,lon:-145.73,type:'gmd',stock0:12},
+  VAFB:{n:'Vandenberg (GMD)',s:'VANDENBERG',lat:34.73,lon:-120.57,type:'gmd',stock0:4,left:1},
+  ELM:{n:'JB Elmendorf-Richardson',s:'ELMENDORF',lat:61.25,lon:-149.8,type:'air',left:1},
+  OFFUTT:{n:'Offutt AFB (STRATCOM)',s:'OFFUTT',lat:41.12,lon:-95.91,type:'base'},
+  NORFOLK:{n:'Námořní základna Norfolk',s:'NORFOLK',lat:36.95,lon:-76.33,type:'base'},
+  KINGS:{n:'Kings Bay (ponorky SSBN)',s:'KINGS BAY',lat:30.8,lon:-81.56,type:'base'},
+  BANGOR:{n:'Bangor (ponorky SSBN)',s:'BANGOR',lat:47.73,lon:-122.71,type:'base',left:1},
+  CMOC:{n:'Cheyenne Mountain',s:'NORAD',lat:38.74,lon:-104.85,type:'hq'},
+};
+const LAUNCH = {
+  ICBM:[['Kozelsk',54.03,35.78],['Tatiščevo',51.67,45.6],['Tějkovo',56.93,40.53],['Jasnyj',51.1,59.85],['Užur',55.3,89.83],['Novosibirsk',55.0,83.0],['Irkutsk',52.3,104.3],['Barnaul',53.3,83.8]],
+  SLBM:[['Barentsovo moře',73,40,'arc'],['severní Atlantik',47,-42,'atl'],['severní Pacifik',44,-158,'pac'],['Ochotské moře',55,150,'pac'],['Norské moře',68,2,'arc']],
+  BMB:[['Engels',51.48,46.2],['Ukrajinka',51.17,128.4],['Olenja',68.15,33.46]],
+};
+const POOL = {
+  ICBM:{MALM:9,MINOT:9,WARREN:9,OFFUTT:4,GREELY:4,VAFB:3,CMOC:2,DC:5,NYC:5,CHI:4,LA:4,HOU:3,SEA:3,SF:3,BOS:2,ATL:3,DEN:2,ELM:2,KINGS:2,BANGOR:2,NORFOLK:2},
+  atl:{DC:6,NYC:5,BOS:4,NORFOLK:4,KINGS:4,ATL:2},
+  pac:{SEA:4,SF:4,LA:5,BANGOR:4,VAFB:3,ELM:2,GREELY:2},
+  BMB:{ELM:4,GREELY:3,SEA:3,BANGOR:2,MINOT:2},
+};
+const RU_TARGETS = {
+  limited: LAUNCH.ICBM.map(z => [z[1], z[2]]),
+  cities: [[55.75,37.6],[59.9,30.3],[56.8,60.6],[43.1,131.9],[55.0,82.9],[53.2,50.1]],
+};
+const KIND = {ICBM:'ICBM · mezikontinentální', SLBM:'SLBM · z ponorky', BMB:'Strategický bombardér'};
+const STATUS = {unverified:'NEOVĚŘENO', verifying:'OVĚŘUJE SE', confirmed:'POTVRZENO', false:'FALEŠNÝ', destroyed:'ZNIČENO', impact:'DOPAD'};
+
+/* ---------- vector math ---------- */
+function toVec(lat, lon){ const a = lat*DEG, o = lon*DEG; return [Math.cos(a)*Math.cos(o), Math.cos(a)*Math.sin(o), Math.sin(a)]; }
+function fromVec(v){ return [Math.asin(clamp(v[2],-1,1))/DEG, Math.atan2(v[1], v[0])/DEG]; }
+function slerp(a, b, t){
+  const d = clamp(a[0]*b[0]+a[1]*b[1]+a[2]*b[2], -1, 1), w = Math.acos(d);
+  if (w < 1e-6) return a;
+  const s = Math.sin(w), k1 = Math.sin((1-t)*w)/s, k2 = Math.sin(t*w)/s;
+  return [a[0]*k1+b[0]*k2, a[1]*k1+b[1]*k2, a[2]*k1+b[2]*k2];
+}
+const along = (a, b, t) => fromVec(slerp(a, b, t));
+
+/* ---------- formatting ---------- */
+const pad = n => String(Math.floor(n)).padStart(2, '0');
+const fmtT = t => `T+${pad(t/3600)}:${pad(t/60%60)}:${pad(t%60)}`;
+const fmtEta = s => s <= 0 ? '00:00' : `${pad(s/60)}:${pad(s%60)}`;
+const fmtM = m => m < 0.05 ? '0' : `${m.toFixed(1).replace('.', ',')} mil.`;
+function zulu(t){ const z = (3*3600 + 12*60 + t) % 86400; return `${pad(z/3600)}:${pad(z/60%60)}Z`; }
+
+/* ---------- sound ---------- */
+let AC = null, soundOn = true;
+function tone(f, d, type='square', v=0.04, delay=0){
+  if (!AC || !soundOn) return;
+  const t = AC.currentTime + delay, o = AC.createOscillator(), g = AC.createGain();
+  o.type = type; o.frequency.value = f;
+  g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+  o.connect(g).connect(AC.destination); o.start(t); o.stop(t + d + 0.03);
+}
+const alarm = () => { tone(880,.14); tone(660,.14,'square',.04,.17); tone(880,.14,'square',.04,.34); };
+const thud = () => { tone(70,.9,'sine',.18); tone(45,1.2,'triangle',.12); };
+const blip = () => tone(1320,.06,'sine',.05);
+
+/* ---------- state ---------- */
+let S = null;
+const logEl = $('#log');
+function log(msg, lvl='info'){
+  const li = document.createElement('li'); li.className = lvl;
+  const tm = document.createElement('time'); tm.textContent = fmtT(S.t);
+  const sp = document.createElement('span'); sp.textContent = msg;
+  li.append(tm, sp); logEl.prepend(li);
+  while (logEl.children.length > 120) logEl.lastChild.remove();
+}
+
+function weighted(pool){
+  const entries = Object.entries(pool).map(([k, w]) => {
+    const s = SITES[k];
+    if (s.type !== 'city' && s.type !== 'hq' && s.dead) w = 0;
+    if (s.type === 'city') w = w / (1 + 2*s.hits);
+    if (k === 'DC' && S.t < 700) w = 0;
+    return [k, w];
+  }).filter(e => e[1] > 0);
+  let r = Math.random() * entries.reduce((a, e) => a + e[1], 0);
+  for (const [k, w] of entries) { if ((r -= w) <= 0) return k; }
+  return entries.length ? entries[0][0] : 'CHI';
+}
+
+function spawnTrack(kind, real, zone, target){
+  if (!zone) zone = pick(LAUNCH[kind]);
+  if (!target){
+    const pool = kind === 'SLBM' ? (zone[3] === 'arc' ? {...POOL.atl, ...POOL.pac} : POOL[zone[3]]) : POOL[kind];
+    target = weighted(pool);
+  }
+  const ft = kind === 'ICBM' ? rand(1500, 1800) : kind === 'SLBM' ? rand(600, 840) : rand(3600, 4200);
+  const s = SITES[target];
+  const tr = {id: (kind === 'BMB' ? 'B-' : 'K-') + (S.seq++), kind, real, zone: zone[0], target,
+    a: toVec(zone[1], zone[2]), b: toVec(s.lat, s.lon), tLaunch: S.t, tFlight: ft,
+    status: 'unverified', verifyEnd: null, tEnd: null};
+  S.tracks.push(tr);
+  return tr;
+}
+const eta = tr => tr.tLaunch + tr.tFlight - S.t;
+const active = tr => tr.status === 'unverified' || tr.status === 'confirmed';
+const posOf = (tr, t = S.t) => along(tr.a, tr.b, clamp((t - tr.tLaunch) / tr.tFlight, 0, 1));
+
+function newGame(){
+  S = {t:0, speed:1, paused:false, running:true, ended:false, defcon:3, defNext:0,
+    esc:35, cred:70, arsenal:150, cas:0, enemyCas:0, potus:'dc', potusEta:0,
+    tracks:[], ints:[], out:[], fx:[], events:[], nextWave:420, hotNext:480, hotOK:0, hotTries:0,
+    lastStrike:-1e9, limitedNext:0, fullUsed:false, strikes:0, fighters:6, ceasefire:false,
+    code: genCode(), sasOpen:false, seq:100, selected:null,
+    stats:{fired:0, kills:0, impacts:0, falseSeen:0, wasted:0, realLaunched:0}};
+  for (const s of Object.values(SITES)){
+    s.dead = false; s.hits = 0; s.alertT = null;
+    if (s.type === 'city') s.remain = s.pop;
+    if (s.type === 'gmd') s.stock = s.stock0;
+  }
+  logEl.innerHTML = '';
+  $('#trkList').querySelectorAll('.trk').forEach(r => r.remove());
+  rows.clear();
+  buildCities();
+  $('#sasCode').hidden = true; $('#bSas').hidden = false; $('#retCode').value = '';
+  const ev = (t, f) => S.events.push({t, f});
+  ev(3, firstWave);
+  ev(25, () => log('NMCC svolává konferenci o ohrožení. Prezident je informován.'));
+  ev(70, () => log('Doporučení štábu: ověřte kontakty a zvažte DEFCON 2, bez něj nelze odpálit GMD.'));
+  ev(150, () => log('Námořnictvo: ztracen kontakt s ruskou strategickou ponorkou v severním Atlantiku.', 'warn'));
+  ev(210, () => { spawnTrack('SLBM', true, LAUNCH.SLBM[1], 'KINGS'); S.arsenal--; S.stats.realLaunched++;
+    log('SBIRS: start z hladiny severního Atlantiku. Balistická raketa z ponorky, let kolem 12 minut.', 'crit'); alarm(); });
+  ev(480, () => log('Spojení horkou linkou Washington–Moskva je navázáno.', 'ok'));
+  log('Převzali jste velení směny. Systémy včasné výstrahy v provozu.', 'own');
+}
+function genCode(){ const L = 'ABCDEFHJKLMNPRSTVXZ'; return pick(L) + Math.floor(rand(1,10)) + pick(L) + Math.floor(rand(1,10)); }
+
+function firstWave(){
+  const a = spawnTrack('ICBM', true, LAUNCH.ICBM[0], 'MALM');
+  spawnTrack('ICBM', true, LAUNCH.ICBM[1], 'MINOT');
+  spawnTrack('ICBM', false, LAUNCH.ICBM[3], 'WARREN');
+  S.arsenal -= 2; S.stats.realLaunched += 2;
+  log('SBIRS: zachyceny 3 starty balistických raket z území Ruska (K-100 až K-102).', 'crit');
+  alarm(); select(a.id);
+}
+
+function spawnWave(){
+  let n = Math.round((S.esc/14) * (1.4 - S.cred/100) * rand(0.7, 1.3));
+  n = clamp(n, 0, Math.min(6, Math.floor(S.arsenal)));
+  const f = Math.random() < 0.35 ? (Math.random() < 0.5 ? 1 : 2) : 0;
+  if (n + f === 0){ log('Satelity hlásí klid. Žádné nové starty.', 'info'); return; }
+  S.arsenal -= n; S.esc += 1; S.stats.realLaunched += n;
+  const ids = [];
+  for (let i = 0; i < n; i++){ const r = Math.random(); ids.push(spawnTrack(r < .55 ? 'ICBM' : r < .88 ? 'SLBM' : 'BMB', true).id); }
+  for (let i = 0; i < f; i++) ids.push(spawnTrack(pick(['ICBM','ICBM','SLBM']), false).id);
+  ids.sort();
+  log(`Nová vlna: ${ids.length} ${ids.length === 1 ? 'kontakt' : ids.length < 5 ? 'kontakty' : 'kontaktů'} (${ids.join(', ')}).`, 'crit');
+  alarm();
+  if (!S.selected || !S.tracks.find(t => t.id === S.selected && active(t))) select(ids[0]);
+}
+
+/* ---------- actions ---------- */
+function selTrack(){ return S && S.tracks.find(t => t.id === S.selected); }
+function select(id){ S.selected = id; ui(true); }
+
+function verify(){
+  const tr = selTrack(); if (!tr || tr.status !== 'unverified' || tr.verifyEnd) return;
+  tr.verifyEnd = S.t + 90; blip();
+  log(`${tr.id}: zahájena korelace dat SBIRS a radarů včasné výstrahy.`, 'own');
+}
+function gmdBlock(tr){
+  if (!tr) return 'Není vybrán kontakt.';
+  if (!active(tr)) return 'Kontakt už není aktivní.';
+  if (tr.kind !== 'ICBM') return 'GMD zasahuje jen mezikontinentální rakety.';
+  if (S.defcon > 2) return 'GMD vyžaduje DEFCON 2 nebo vyšší pohotovost.';
+  if (eta(tr) < 300) return 'Příliš pozdě, interceptor by nestihl zasáhnout.';
+  return null;
+}
+function engage(n){
+  const tr = selTrack(), why = gmdBlock(tr); if (why) return;
+  const base = ['GREELY','VAFB'].find(k => !SITES[k].dead && SITES[k].stock >= n);
+  if (!base){ log('Nedostatek interceptorů GMD.', 'warn'); return; }
+  SITES[base].stock -= n; S.stats.fired += n;
+  const t1 = S.t + 240;
+  S.ints.push({tr, n, base, t0:S.t, t1, kind:'gmd', a: toVec(SITES[base].lat, SITES[base].lon), b: toVec(...posOf(tr, t1))});
+  log(`${SITES[base].s}: odpáleno ${n}× GBI proti ${tr.id}. Střet za 4 minuty.`, 'own'); blip();
+}
+function fightBlock(tr){
+  if (!tr) return 'Není vybrán kontakt.';
+  if (!active(tr)) return 'Kontakt už není aktivní.';
+  if (tr.kind !== 'BMB') return 'Stíhači zasahují jen bombardéry.';
+  if (SITES.ELM.dead) return 'Základna Elmendorf je vyřazena.';
+  if (S.fighters < 1) return 'Všechny letky jsou ve vzduchu.';
+  if (eta(tr) < 700) return 'Bombardér je příliš blízko cíle.';
+  return null;
+}
+function scramble(){
+  const tr = selTrack(); if (fightBlock(tr)) return;
+  S.fighters--; const t1 = S.t + 600;
+  S.ints.push({tr, n:1, base:'ELM', t0:S.t, t1, kind:'fighter', a: toVec(SITES.ELM.lat, SITES.ELM.lon), b: toVec(...posOf(tr, t1))});
+  log(`Elmendorf: letka F-22 vyslána proti ${tr.id}. Střet za 10 minut.`, 'own'); blip();
+}
+function evac(){
+  if (S.potus !== 'dc') return;
+  S.potus = 'moving'; S.potusEta = S.t + 600;
+  log('Prezident opouští Bílý dům. Marine One míří k letounu E-4B, odhad 10 minut.', 'own');
+}
+function setDefcon(d){
+  if (S.t < S.defNext) return;
+  const nd = clamp(S.defcon + d, 1, 5); if (nd === S.defcon) return;
+  S.defcon = nd; S.defNext = S.t + 60;
+  if (d < 0){ S.cred = clamp(S.cred + 5, 0, 100); S.esc += 4; log(`Vyhlášen DEFCON ${nd}.`, nd === 1 ? 'crit' : 'warn'); }
+  else { S.cred = clamp(S.cred - 4, 0, 100); S.esc = Math.max(0, S.esc - 3); log(`Pohotovost snížena na DEFCON ${nd}. Signál deeskalace.`, 'own'); }
+}
+function hotline(){
+  if (S.t < S.hotNext || S.ceasefire) return;
+  S.hotNext = S.t + 300; S.hotTries++;
+  const recent = S.t - S.lastStrike < 900;
+  const p = clamp(0.8 - S.esc/120 - (recent ? .35 : 0) - (S.cred < 40 ? .15 : 0), .05, .9);
+  if (Math.random() < p){
+    const d = Math.round(rand(14, 22)); S.esc = Math.max(0, S.esc - d); S.hotOK++;
+    log(`Horká linka: Moskva přijala návrh na zastavení dalších startů. Eskalace −${d}.`, 'ok');
+  } else {
+    S.esc += 3;
+    log(recent ? 'Horká linka: po americkém úderu Moskva jednání odmítá.' : 'Horká linka: druhá strana návrh odmítla.', 'warn');
+  }
+}
+function retBlock(kind){
+  if (S.defcon !== 1) return 'Vyžaduje DEFCON 1.';
+  if (S.potus === 'dead') return 'Prezident nedostupný.';
+  if ($('#retCode').value.trim().toUpperCase() !== S.code) return 'Chybí platný kód.';
+  if (S.fullUsed) return 'Plný protiúder už proběhl.';
+  if (kind === 'limited' && S.t < S.limitedNext) return 'Další omezený úder za ' + fmtEta(S.limitedNext - S.t) + '.';
+  return null;
+}
+function strike(kind){
+  const code = $('#retCode').value.trim().toUpperCase();
+  if (S.defcon === 1 && code && code !== S.code){ log('Autentizační kód nesouhlasí. Rozkaz neplatný.', 'warn'); return; }
+  if (retBlock(kind)) return;
+  const silos = ['MALM','MINOT','WARREN'].filter(k => !SITES[k].dead).map(k => [SITES[k].lat, SITES[k].lon]);
+  const origins = silos.length ? silos : [[40,-40],[42,-150]];
+  const tgts = kind === 'full' ? [...RU_TARGETS.limited, ...RU_TARGETS.cities] : RU_TARGETS.limited.slice(0, 6);
+  const ft = 1650;
+  for (const t of tgts){ const o = pick(origins); S.out.push({a: toVec(o[0], o[1]), b: toVec(t[0], t[1]), t0: S.t + rand(0, 40), ft}); }
+  S.lastStrike = S.t; S.strikes++;
+  $('#retCode').value = '';
+  if (kind === 'full'){
+    S.fullUsed = true; S.cred = clamp(S.cred + 50, 0, 100); S.esc += 45;
+    log(`Prezident autorizoval PLNÝ PROTIÚDER. Odpáleno ${tgts.length} raket. Dopad za ~27 minut.`, 'crit');
+    S.events.push({t: S.t + ft + 20, f: () => { S.arsenal *= .45; S.enemyCas += 45; log('Hlášení: americké hlavice dopadly na cíle v Rusku. Odhad obětí v desítkách milionů.', 'crit'); }});
+  } else {
+    S.limitedNext = S.t + 900; S.cred = clamp(S.cred + 30, 0, 100); S.esc += 20;
+    log(`Prezident autorizoval omezený úder na ${tgts.length} odpalovacích základen.`, 'crit');
+    S.events.push({t: S.t + ft + 20, f: () => { S.arsenal *= .8; S.enemyCas += 1.5; log('Hlášení: omezený úder dopadl. Část ruských odpalovacích zařízení vyřazena.', 'warn'); }});
+  }
+  S.nextWave = Math.min(S.nextWave, S.t + 90);
+  log('Ruské radary odvetu zachytí. Očekávejte odpověď.', 'warn');
+  alarm();
+}
+
+/* ---------- simulation ---------- */
+function update(dt){
+  S.t += dt;
+  S.esc += dt / 60 * 0.5;
+  S.esc = clamp(S.esc, 0, 100);
+
+  S.events.sort((a, b) => a.t - b.t);
+  while (S.events.length && S.events[0].t <= S.t) S.events.shift().f();
+  if (S.ended) return;
+
+  if (!S.ceasefire && S.t >= S.nextWave){ spawnWave(); S.nextWave = S.t + rand(200, 320); }
+
+  for (const tr of S.tracks){
+    if (!active(tr)) continue;
+    const e = eta(tr);
+    if (tr.verifyEnd && S.t >= tr.verifyEnd){
+      tr.verifyEnd = null;
+      if (tr.real){ tr.status = 'confirmed'; log(`${tr.id}: POTVRZENO. Skutečná hrozba, cíl ${SITES[tr.target].n}.`, 'crit'); }
+      else { tr.status = 'false'; tr.tEnd = S.t; S.stats.falseSeen++; log(`${tr.id}: falešný kontakt (odraz od oblačnosti). Vyřazen ze sledování.`, 'ok'); }
+      continue;
+    }
+    if (tr.status === 'unverified' && e < 480 && tr.kind !== 'BMB'){
+      tr.verifyEnd = null;
+      if (tr.real){ tr.status = 'confirmed'; log(`${tr.id}: pozemní radar potvrdil hlavici. Cíl ${SITES[tr.target].n}, dopad za ${fmtEta(e)}.`, 'crit'); }
+      else { tr.status = 'false'; tr.tEnd = S.t; S.stats.falseSeen++; log(`${tr.id}: radary nic nezachytily. Šlo o falešný kontakt.`, 'ok'); }
+      continue;
+    }
+    if (e <= 0){
+      if (tr.real) impact(tr); else { tr.status = 'false'; tr.tEnd = S.t; }
+    }
+  }
+
+  for (const it of S.ints){
+    if (it.done || S.t < it.t1) continue;
+    it.done = true; const tr = it.tr;
+    if (!active(tr)){ S.stats.wasted += it.n; log(`${it.kind === 'gmd' ? 'Interceptor' : 'Letka'} nenašla cíl ${tr.id}, kontakt už neexistuje.`, 'info'); if (it.kind === 'fighter') S.fighters++; continue; }
+    if (!tr.real){ tr.status = 'false'; tr.tEnd = S.t; S.stats.wasted += it.n; S.stats.falseSeen++;
+      log(`${tr.id}: v prostoru střetu nic není. Kontakt byl falešný, ${it.kind === 'gmd' ? 'interceptor promarněn' : 'letka se vrací'}.`, 'warn');
+      if (it.kind === 'fighter') S.fighters++; continue; }
+    const p = it.kind === 'gmd' ? 1 - Math.pow(0.45, it.n) : 0.8;
+    const pos = posOf(tr);
+    if (Math.random() < p){
+      tr.status = 'destroyed'; tr.tEnd = S.t; S.stats.kills++; S.cred = clamp(S.cred + 2, 0, 100);
+      S.fx.push({lat: pos[0], lon: pos[1], t0: performance.now(), col: 'cyan', dur: 1600, r: 18});
+      log(`${tr.id}: ZÁSAH. Hrozba zničena ${it.kind === 'gmd' ? 'interceptorem GBI' : 'stíhači F-22'}.`, 'ok'); tone(990,.1,'sine',.06); tone(1480,.18,'sine',.05,.1);
+      if (it.kind === 'fighter' && Math.random() < .9) S.fighters++;
+    } else {
+      S.fx.push({lat: pos[0], lon: pos[1], t0: performance.now(), col: 'dim', dur: 1200, r: 12});
+      log(`${tr.id}: MINUTÍ. Hrozba pokračuje, dopad za ${fmtEta(eta(tr))}.`, 'warn');
+      if (it.kind === 'fighter' && Math.random() < .6) S.fighters++;
+    }
+  }
+  S.ints = S.ints.filter(it => !it.done);
+
+  if (S.potus === 'moving' && S.t >= S.potusEta){ S.potus = 'air'; log('Prezident je na palubě E-4B. Řetězec velení zajištěn.', 'ok'); }
+
+  if (!S.ceasefire && S.hotOK >= 2 && S.esc < 20 && S.cred >= 40){
+    S.ceasefire = true;
+    log('MOSKVA SOUHLASÍ S PŘÍMĚŘÍM. Nové starty nejsou očekávány. Rakety ve vzduchu ale odvolat nelze.', 'ok');
+    tone(523,.25,'sine',.06); tone(659,.25,'sine',.06,.25); tone(784,.4,'sine',.06,.5);
+  }
+  if (S.ceasefire && !S.tracks.some(t => active(t) && t.real) && !S.out.some(o => S.t < o.t0 + o.ft)) return endGame('ceasefire');
+  if (S.t >= END_T) return endGame('timeout');
+}
+
+function impact(tr){
+  const s = SITES[tr.target]; tr.status = 'impact'; tr.tEnd = S.t; S.stats.impacts++;
+  S.fx.push({lat: s.lat, lon: s.lon, t0: performance.now(), col: 'red', dur: 4500, r: 46});
+  thud(); s.hits++;
+  if (s.type === 'city'){
+    const lead = s.alertT == null ? 0 : S.t - s.alertT;
+    const red = clamp(lead / 1200, 0, 1) * 0.45;
+    const k = s.remain * 0.3 * (1 - red);
+    s.remain -= k; S.cas += k; S.cred = clamp(S.cred - 6, 0, 100);
+    log(`DOPAD: ${s.n}. Odhad obětí ${fmtM(k)}${red > 0.05 ? `, varování EAS ztráty snížilo o ${Math.round(red*100)} %` : ', obyvatelé nebyli varováni'}.`, 'crit');
+    if (tr.target === 'DC' && S.potus !== 'air'){
+      S.potus = 'dead';
+      log('Spojení s prezidentem přerušeno. Řetězec velení je narušen.', 'crit');
+      S.events.push({t: S.t + 8, f: () => endGame('decap')});
+    }
+  } else if (s.type === 'hq'){
+    S.cred = clamp(S.cred - 2, 0, 100);
+    log('DOPAD u Cheyenne Mountain. Velín v hoře odolal, spojení obnoveno na záložních linkách.', 'crit');
+  } else {
+    const was = s.dead; s.dead = true; S.cred = clamp(S.cred - 3, 0, 100);
+    const k = s.type === 'silo' ? 0.02 : 0.12; S.cas += k;
+    let extra = '';
+    if (s.type === 'gmd' && !was){ extra = ` Ztraceno ${s.stock} interceptorů.`; s.stock = 0; }
+    if (s.type === 'air' && !was){ extra = ' Letky na zemi ztraceny.'; S.fighters = 0; }
+    if (s.type === 'silo') extra = ' Raketové pole vyřazeno.';
+    log(`DOPAD: ${s.n}.${extra}`, 'crit');
+  }
+}
+
+/* ---------- end ---------- */
+function endGame(reason){
+  if (S.ended) return; S.ended = true; S.running = false;
+  const total = S.cas + S.enemyCas;
+  let verdict, text;
+  if (reason === 'decap'){ verdict = 'Ztráta velení'; text = 'Washington byl zasažen dřív, než prezident unikl. Řetězec velení se rozpadl a konflikt pokračuje bez koordinace.'; }
+  else if (total >= 60){ verdict = 'Totální jaderná válka'; text = 'Výměna úderů se vymkla kontrole. Obě země utrpěly ztráty, ze kterých se budou vzpamatovávat desítky let.'; }
+  else if (reason === 'ceasefire' && total < 3){ verdict = 'Krize zvládnuta'; text = 'Konflikt se podařilo zastavit s minimálními ztrátami. Diplomacie a obrana zabraly.'; }
+  else if (reason === 'ceasefire' && total < 20){ verdict = 'Příměří'; text = 'Zbraně utichly, ale cena byla vysoká.'; }
+  else if (reason === 'ceasefire'){ verdict = 'Pyrrhovo příměří'; text = 'Příměří platí, ale miliony lidí zemřely.'; }
+  else { verdict = 'Konflikt pokračuje'; text = 'Uplynulo 90 minut a příměří se nepodařilo vyjednat. Vaše směna končí.'; }
+  const row = (k, v) => `<span>${k}</span><span>${v}</span>`;
+  const real = S.stats.realLaunched;
+  $('#brief').innerHTML = `
+    <p class="eyebrow">Hlášení po směně · ${fmtT(S.t)}</p>
+    <div class="verdict" style="color:${reason === 'ceasefire' && total < 20 ? 'var(--ok)' : 'var(--red)'}">${verdict}</div>
+    <p>${text}</p>
+    <div class="report">
+      ${row('Oběti v USA (odhad)', fmtM(S.cas))}
+      ${row('Oběti v Rusku (odhad)', fmtM(S.enemyCas))}
+      ${row('Skutečné hrozby / zničené', `${real} / ${S.stats.kills}`)}
+      ${row('Dopady na území USA', S.stats.impacts)}
+      ${row('Odpálené interceptory', `${S.stats.fired} (promarněno ${S.stats.wasted})`)}
+      ${row('Odhalené falešné kontakty', S.stats.falseSeen)}
+      ${row('Americké jaderné údery', S.strikes)}
+      ${row('Úspěšné hovory horkou linkou', `${S.hotOK} z ${S.hotTries}`)}
+      ${row('Konečná eskalace / odstrašení', `${Math.round(S.esc)} / ${Math.round(S.cred)}`)}
+    </div>
+    <button class="btn" id="againBtn">Nová směna</button>`;
+  $('#ovl').hidden = false;
+  $('#againBtn').onclick = start;
+  $('#againBtn').focus();
+}
+
+/* ---------- map rendering ---------- */
+const cv = $('#map'), ctx = cv.getContext('2d'), wrap = $('#mapWrap');
+const V = {w: 0, h: 0, zoom: 1, px: 0, py: 0, k: 1, cx: 0, cy: 0};
+const C = {};
+function readColors(){ const cs = getComputedStyle(document.documentElement); for (const k of ['bg','ocean','land','coast','line','fg','dim','amber','red','cyan','ok']) C[k] = cs.getPropertyValue('--' + k).trim(); }
+function resize(){
+  const r = wrap.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  V.w = r.width; V.h = r.height;
+  cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+function viewCalc(){
+  const base = Math.min(V.h / 104, V.w / 100);
+  V.k = base * V.zoom; V.cx = V.w / 2 + V.px; V.cy = V.h / 2 - 13 * V.k + V.py;
+}
+function proj(lat, lon){ const r = (90 - lat) * V.k, a = (lon + 100) * DEG; return [V.cx + r*Math.sin(a), V.cy + r*Math.cos(a)]; }
+function poly(pts){ ctx.beginPath(); pts.forEach((p, i) => { const [x, y] = proj(p[0], p[1]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.closePath(); }
+function alpha(col, a){ ctx.globalAlpha = a; return col; }
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function draw(now){
+  viewCalc();
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, V.w, V.h);
+  ctx.save();
+  ctx.beginPath(); ctx.arc(V.cx, V.cy, 95 * V.k, 0, Math.PI*2); ctx.fillStyle = C.ocean; ctx.fill(); ctx.clip();
+
+  // grid
+  ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
+  for (let lat = 0; lat < 90; lat += 15){ ctx.beginPath(); ctx.arc(V.cx, V.cy, (90 - lat) * V.k, 0, Math.PI*2); ctx.stroke(); }
+  for (let lon = -180; lon < 180; lon += 30){ const [x, y] = proj(-5, lon); ctx.beginPath(); ctx.moveTo(V.cx, V.cy); ctx.lineTo(x, y); ctx.stroke(); }
+  ctx.setLineDash([]);
+
+  // land
+  ctx.lineWidth = 1;
+  for (const p of LAND){ poly(p); ctx.fillStyle = C.land; ctx.fill(); ctx.strokeStyle = C.coast; ctx.stroke(); }
+  for (const p of WATER){ poly(p); ctx.fillStyle = C.ocean; ctx.fill(); ctx.strokeStyle = C.coast; ctx.stroke(); }
+
+  // radar sweep
+  if (!reduced && ctx.createConicGradient){
+    const ang = (now / 5200) % (Math.PI*2);
+    const g = ctx.createConicGradient(ang, V.cx, V.cy);
+    g.addColorStop(0, 'rgba(98,210,227,0.10)'); g.addColorStop(0.07, 'rgba(98,210,227,0)'); g.addColorStop(1, 'rgba(98,210,227,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(V.cx, V.cy, 95*V.k, 0, Math.PI*2); ctx.fill();
+  }
+
+  // lat labels
+  ctx.font = '9px "IBM Plex Mono", monospace'; ctx.fillStyle = alpha(C.dim, .7);
+  for (const lat of [30, 45, 60, 75]){ const [x, y] = proj(lat, 170); ctx.fillText(lat + '°N', x + 3, y - 3); }
+  ctx.globalAlpha = 1;
+
+  if (S){
+    // sites
+    for (const [key, s] of Object.entries(SITES)){
+      const [x, y] = proj(s.lat, s.lon);
+      const hit = s.hits > 0;
+      const col = s.type === 'city' ? (hit ? C.red : C.fg) : (s.dead ? C.red : C.cyan);
+      ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 1.2;
+      if (s.type === 'city'){ ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI*2); s.alertT != null ? ctx.fill() : ctx.stroke(); }
+      else if (s.type === 'hq'){ ctx.beginPath(); ctx.moveTo(x, y-5); ctx.lineTo(x+5, y+4); ctx.lineTo(x-5, y+4); ctx.closePath(); ctx.stroke(); }
+      else { ctx.strokeRect(x - 2.5, y - 2.5, 5, 5); }
+      if (s.dead || hit){ ctx.strokeStyle = C.red; ctx.beginPath(); ctx.moveTo(x-5, y-5); ctx.lineTo(x+5, y+5); ctx.moveTo(x+5, y-5); ctx.lineTo(x-5, y+5); ctx.stroke(); }
+      if (V.k > 4.2){
+        ctx.font = '9px "IBM Plex Mono", monospace';
+        ctx.fillStyle = alpha(s.type === 'city' ? C.fg : C.cyan, .62);
+        ctx.textAlign = s.left ? 'right' : 'left';
+        ctx.fillText(s.s, x + (s.up ? -4 : s.left ? -7 : 7), y + (s.up ? -7 : 3));
+        ctx.textAlign = 'left'; ctx.globalAlpha = 1;
+      }
+    }
+
+    // outgoing US strikes
+    for (const o of S.out){
+      const f = (S.t - o.t0) / o.ft; if (f < 0) continue;
+      const done = f >= 1;
+      if (done && S.t - (o.t0 + o.ft) > 300) continue;
+      trail(o.a, o.b, Math.min(f, 1), C.cyan, done ? .25 : .8, []);
+      if (!done){ const [x, y] = proj(...along(o.a, o.b, f)); ctx.fillStyle = C.cyan; ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI*2); ctx.fill(); }
+      else if (!o.flashed){ o.flashed = true; const p = fromVec(o.b); S.fx.push({lat: p[0], lon: p[1], t0: now, col: 'cyan', dur: 3000, r: 30}); }
+    }
+
+    // interceptors
+    for (const it of S.ints){
+      const f = clamp((S.t - it.t0) / (it.t1 - it.t0), 0, 1);
+      trail(it.a, it.b, f, C.cyan, .9, [3, 3]);
+      const [x, y] = proj(...along(it.a, it.b, f));
+      ctx.fillStyle = C.cyan; ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI*2); ctx.fill();
+      const [bx, by] = proj(...fromVec(it.b)); ctx.strokeStyle = alpha(C.cyan, .5); ctx.beginPath(); ctx.arc(bx, by, 6, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha = 1;
+    }
+
+    // hostile tracks
+    for (const tr of S.tracks){
+      const f = clamp((S.t - tr.tLaunch) / tr.tFlight, 0, 1);
+      const sel = tr.id === S.selected;
+      if (!active(tr)){
+        if (S.t - tr.tEnd > 120) continue;
+        trail(tr.a, tr.b, f, tr.status === 'impact' ? C.red : C.dim, .35, []);
+        continue;
+      }
+      const col = tr.status === 'confirmed' ? C.red : C.amber;
+      const dash = tr.status === 'confirmed' ? [] : [5, 4];
+      // predicted path
+      ctx.setLineDash([1, 5]); ctx.strokeStyle = alpha(col, sel ? .65 : .22); ctx.lineWidth = 1;
+      ctx.beginPath(); for (let i = 0; i <= 24; i++){ const [x, y] = proj(...along(tr.a, tr.b, f + (1 - f) * i / 24)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+      trail(tr.a, tr.b, f, col, .95, dash, sel ? 2 : 1.4);
+      const [x, y] = proj(...along(tr.a, tr.b, f));
+      const blink = tr.verifyEnd && Math.floor(now / 300) % 2;
+      ctx.fillStyle = col; ctx.beginPath();
+      if (tr.kind === 'BMB'){ ctx.rect(x - 3, y - 3, 6, 6); } else { ctx.arc(x, y, 3.5, 0, Math.PI*2); }
+      if (!blink) ctx.fill();
+      if (sel){ ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.strokeRect(x - 9, y - 9, 18, 18); }
+      ctx.font = `${sel ? 600 : 500} 10px "IBM Plex Mono", monospace`; ctx.fillStyle = col;
+      ctx.fillText(tr.id, x + 8, y - 6);
+      if (sel){ const [tx, ty] = proj(SITES[tr.target].lat, SITES[tr.target].lon); ctx.strokeStyle = col; ctx.beginPath(); ctx.arc(tx, ty, 9, 0, Math.PI*2); ctx.stroke(); }
+    }
+
+    // effects
+    S.fx = S.fx.filter(e => now - e.t0 < e.dur);
+    for (const e of S.fx){
+      const f = (now - e.t0) / e.dur, [x, y] = proj(e.lat, e.lon);
+      ctx.strokeStyle = alpha(C[e.col], 1 - f); ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(x, y, 3 + e.r * f, 0, Math.PI*2); ctx.stroke();
+      if (e.col === 'red'){ ctx.beginPath(); ctx.arc(x, y, 2 + e.r * .55 * Math.min(1, f*2), 0, Math.PI*2); ctx.stroke(); ctx.fillStyle = alpha(C.red, (1 - f) * .35); ctx.fill(); }
+      ctx.globalAlpha = 1;
+    }
+  }
+  ctx.restore();
+  ctx.strokeStyle = C.line; ctx.beginPath(); ctx.arc(V.cx, V.cy, 95 * V.k, 0, Math.PI*2); ctx.stroke();
+}
+function trail(a, b, f, col, al, dash, lw = 1.4){
+  ctx.setLineDash(dash); ctx.strokeStyle = alpha(col, al); ctx.lineWidth = lw;
+  ctx.beginPath(); const n = 28;
+  for (let i = 0; i <= n; i++){ const [x, y] = proj(...along(a, b, f * i / n)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+  ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+}
+
+/* map input */
+let drag = null;
+cv.addEventListener('pointerdown', e => { drag = {x: e.clientX, y: e.clientY, px: V.px, py: V.py, moved: false}; cv.setPointerCapture(e.pointerId); });
+cv.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
+  if (drag.moved){ V.px = drag.px + dx; V.py = drag.py + dy; }
+});
+cv.addEventListener('pointerup', e => {
+  if (drag && !drag.moved && S){
+    const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+    let best = null, bd = 16;
+    for (const tr of S.tracks){ if (!active(tr)) continue; const [x, y] = proj(...posOf(tr)); const d = Math.hypot(x - mx, y - my); if (d < bd){ bd = d; best = tr; } }
+    if (best) select(best.id);
+  }
+  drag = null;
+});
+function zoomAt(f, mx = V.w/2, my = V.h/2){
+  viewCalc();
+  const z2 = clamp(V.zoom * f, .7, 5);
+  const base = V.k / V.zoom, k2 = base * z2;
+  const dx = (mx - V.cx) / V.k, dy = (my - V.cy) / V.k;
+  const cx2 = mx - dx * k2, cy2 = my - dy * k2;
+  V.zoom = z2; V.px = cx2 - V.w/2; V.py = cy2 - V.h/2 + 13 * k2;
+}
+cv.addEventListener('wheel', e => { e.preventDefault(); const r = cv.getBoundingClientRect(); zoomAt(e.deltaY < 0 ? 1.15 : 1/1.15, e.clientX - r.left, e.clientY - r.top); }, {passive: false});
+$('#zIn').onclick = () => zoomAt(1.3);
+$('#zOut').onclick = () => zoomAt(1/1.3);
+$('#zReset').onclick = () => { V.zoom = 1; V.px = 0; V.py = 0; };
+
+/* ---------- UI ---------- */
+const rows = new Map();
+function buildCities(){
+  const el = $('#cityList'); el.innerHTML = '';
+  for (const [k, s] of Object.entries(SITES)){
+    if (s.type !== 'city') continue;
+    const r = document.createElement('div'); r.className = 'city';
+    r.innerHTML = `<span class="nm"></span><span class="sub"></span><button class="btn">Varovat</button>`;
+    r.querySelector('.nm').textContent = s.n;
+    r.querySelector('button').onclick = () => {
+      if (s.alertT != null || !S.running) return;
+      s.alertT = S.t; log(`EAS: vyhlášeno varování pro ${s.n}. Obyvatelé míří do krytů.`, 'own'); blip(); ui(true);
+    };
+    s.row = r; el.append(r);
+  }
+}
+function setBtn(el, why){ el.disabled = !!why; el.title = why || ''; }
+
+let lastUi = 0;
+function ui(force){
+  if (!S) return;
+  const now = performance.now(); if (!force && now - lastUi < 180) return; lastUi = now;
+
+  // header
+  document.querySelectorAll('#defcon span').forEach(s => s.classList.toggle('on', +s.dataset.l === S.defcon));
+  $('#clock').textContent = fmtT(S.t); $('#zulu').textContent = zulu(S.t);
+  $('#escVal').textContent = Math.round(S.esc); $('#escBar').style.width = S.esc + '%';
+  $('#credVal').textContent = Math.round(S.cred); $('#credBar').style.width = S.cred + '%';
+  $('#casVal').textContent = fmtM(S.cas);
+  $('#bPause').textContent = S.paused ? 'Pokračovat' : 'Pauza';
+  $('#bPause').classList.toggle('on', S.paused);
+  document.querySelectorAll('.spd').forEach(b => b.classList.toggle('on', +b.dataset.s === S.speed));
+
+  // tracks
+  const vis = S.tracks.filter(t => active(t) || S.t - t.tEnd < 240)
+    .sort((a, b) => (active(b) - active(a)) || (active(a) ? eta(a) - eta(b) : b.tEnd - a.tEnd));
+  const list = $('#trkList');
+  const ids = new Set(vis.map(t => t.id));
+  for (const [id, r] of rows) if (!ids.has(id)){ r.remove(); rows.delete(id); }
+  let prev = $('#trkEmpty');
+  $('#trkEmpty').hidden = vis.length > 0;
+  for (const tr of vis){
+    let r = rows.get(tr.id);
+    if (!r){
+      r = document.createElement('button'); r.className = 'trk'; r.type = 'button';
+      r.innerHTML = '<span class="id"></span><span class="kd"></span><span class="eta"></span><span class="tg"></span><span class="chip"></span>';
+      r.onclick = () => select(tr.id);
+      rows.set(tr.id, r);
+    }
+    if (prev.nextSibling !== r) prev.after(r);
+    prev = r;
+    const st = tr.verifyEnd ? 'verifying' : tr.status;
+    r.className = `trk st-${st}${tr.id === S.selected ? ' sel' : ''}`;
+    r.children[0].textContent = tr.id;
+    r.children[1].textContent = tr.kind === 'BMB' ? 'BOMB.' : tr.kind;
+    r.children[2].textContent = active(tr) ? fmtEta(eta(tr)) : '—';
+    r.children[3].textContent = (tr.status === 'confirmed' || tr.status === 'impact' ? '→ ' + SITES[tr.target].n : '→ ' + SITES[tr.target].n + '?') + ' · z ' + tr.zone;
+    r.children[4].textContent = STATUS[st];
+  }
+  const nAct = S.tracks.filter(active).length;
+  $('#trkCount').textContent = `${nAct} ${nAct === 1 ? 'aktivní' : 'aktivních'}`;
+
+  // cities
+  for (const s of Object.values(SITES)){
+    if (s.type !== 'city') continue;
+    const threatened = S.tracks.some(t => active(t) && SITES[t.target] === s && t.status === 'confirmed');
+    s.row.className = 'city' + (s.hits ? ' hit' : '') + (s.alertT != null ? ' warned' : '');
+    s.row.querySelector('.sub').textContent = s.hits
+      ? `Zasaženo ${s.hits}× · oběti ${fmtM(s.pop - s.remain)}`
+      : (s.alertT != null ? `Varováno ${fmtT(s.alertT)}` : `${s.pop.toString().replace('.', ',')} mil. obyvatel`) + (threatened ? ' · OHROŽENO' : '');
+    const b = s.row.querySelector('button'); b.disabled = s.alertT != null || !S.running; b.textContent = s.alertT != null ? 'Varováno' : 'Varovat';
+    b.classList.toggle('danger', threatened && s.alertT == null);
+  }
+
+  // detail
+  const tr = selTrack();
+  $('#dId').textContent = tr ? tr.id : '—';
+  const chip = $('#dChip'); chip.hidden = !tr;
+  if (tr){ const st = tr.verifyEnd ? 'verifying' : tr.status; chip.textContent = STATUS[st];
+    chip.style.color = st === 'confirmed' || st === 'impact' ? C.red : st === 'destroyed' ? C.ok : st === 'false' ? C.dim : C.amber; }
+  $('#dKind').textContent = tr ? KIND[tr.kind] : '—';
+  $('#dFrom').textContent = tr ? tr.zone : '—';
+  $('#dTgt').textContent = tr ? SITES[tr.target].n + (tr.status === 'unverified' ? ' (odhad)' : '') : '—';
+  $('#dEta').textContent = tr ? (active(tr) ? fmtEta(eta(tr)) : '—') : '—';
+  const vWhy = !tr ? 'Není vybrán kontakt.' : tr.status !== 'unverified' ? 'Kontakt už je vyhodnocen.' : tr.verifyEnd ? 'Ověřování probíhá.' : null;
+  setBtn($('#bVerify'), vWhy || (S.running ? null : 'Hra neběží'));
+  const gWhy = gmdBlock(tr), stock = ['GREELY','VAFB'].reduce((a, k) => a + (SITES[k].dead ? 0 : SITES[k].stock), 0);
+  setBtn($('#bGmd1'), gWhy || (stock < 1 ? 'Žádné interceptory.' : null));
+  setBtn($('#bGmd2'), gWhy || (!['GREELY','VAFB'].some(k => !SITES[k].dead && SITES[k].stock >= 2) ? 'Nedostatek interceptorů.' : null));
+  const fWhy = fightBlock(tr); setBtn($('#bFight'), fWhy);
+  let note = 'Vyberte kontakt v seznamu nebo na mapě.';
+  if (tr){
+    if (tr.verifyEnd) note = `Korelace dat dokončena za ${fmtEta(tr.verifyEnd - S.t)}.`;
+    else if (tr.status === 'unverified') note = tr.kind === 'BMB' ? 'Bombardér sledovaný radary. Ověřením zjistíte, jestli jde o skutečný útok.' : 'Mohlo by jít o falešný poplach. Ověření trvá 90 s, radar cíl potvrdí 8 minut před dopadem.';
+    else if (tr.status === 'confirmed') note = tr.kind === 'ICBM' ? (gWhy || 'Interceptor GBI má pravděpodobnost zásahu 55 %, salva dvou 80 %.') : tr.kind === 'BMB' ? (fWhy || 'Letka F-22 má šanci na sestřel 80 %.') : 'Rakety z ponorek nelze zachytit. Varujte cíl přes EAS.';
+    else if (tr.status === 'false') note = 'Falešný kontakt. Žádná akce není potřeba.';
+    else if (tr.status === 'destroyed') note = 'Hrozba zničena.';
+    else if (tr.status === 'impact') note = 'Hlavice dopadla.';
+    const pend = S.ints.filter(i => i.tr === tr);
+    if (pend.length) note += ` Ve vzduchu: ${pend.map(i => i.kind === 'gmd' ? i.n + '× GBI' : 'letka F-22').join(', ')}, střet za ${fmtEta(Math.min(...pend.map(i => i.t1)) - S.t)}.`;
+  }
+  $('#dNote').textContent = note;
+
+  // assets
+  const g = SITES.GREELY, v = SITES.VAFB;
+  $('#aGreely').textContent = g.dead ? 'VYŘAZENO' : `${g.stock} / ${g.stock0}`;
+  $('#aVafb').textContent = v.dead ? 'VYŘAZENO' : `${v.stock} / ${v.stock0}`;
+  $('#aFight').textContent = SITES.ELM.dead ? 'VYŘAZENO' : `${S.fighters} ${S.fighters === 1 ? 'letka' : S.fighters < 5 && S.fighters > 0 ? 'letky' : 'letek'}`;
+  $('#aSilos').textContent = `${['MALM','MINOT','WARREN'].filter(k => !SITES[k].dead).length} / 3`;
+  $('#potusStat').textContent = {dc:'Bílý dům', moving:`Evakuace · ${fmtEta(S.potusEta - S.t)}`, air:'E-4B, ve vzduchu', dead:'Nezvěstný'}[S.potus];
+  $('#potusStat').style.color = S.potus === 'air' ? C.ok : S.potus === 'dead' ? C.red : S.potus === 'dc' ? C.amber : C.fg;
+  setBtn($('#bEvac'), S.potus !== 'dc' ? 'Evakuace už proběhla.' : null);
+  $('#defStat').textContent = 'DEFCON ' + S.defcon;
+  setBtn($('#bDefUp'), S.defcon === 1 ? 'Nejvyšší stupeň.' : S.t < S.defNext ? 'Počkejte na předání rozkazu.' : null);
+  setBtn($('#bDefDown'), S.defcon === 5 ? 'Nejnižší stupeň.' : S.t < S.defNext ? 'Počkejte na předání rozkazu.' : null);
+  $('#hotStat').textContent = S.ceasefire ? 'Příměří platí' : S.t < 480 ? 'Navazuje se' : S.t < S.hotNext ? `Znovu za ${fmtEta(S.hotNext - S.t)}` : `Připravena · úspěchy ${S.hotOK}/2`;
+  setBtn($('#bHot'), S.ceasefire ? 'Příměří už platí.' : S.t < S.hotNext ? 'Linka není dostupná.' : null);
+
+  // retaliation
+  const codeOk = $('#retCode').value.trim().toUpperCase() === S.code;
+  const req = [[S.defcon === 1, 'DEFCON 1'], [S.potus !== 'dead', 'Prezident dostupný'], [codeOk, 'Platný autentizační kód']];
+  $('#retReq').innerHTML = req.map(([ok, t]) => `<span class="${ok ? 'y' : 'n'}">${ok ? '✓' : '○'} ${t}</span>`).join('');
+  setBtn($('#bLimited'), retBlock('limited'));
+  setBtn($('#bFull'), retBlock('full'));
+}
+
+/* ---------- wiring ---------- */
+$('#bVerify').onclick = verify;
+$('#bGmd1').onclick = () => engage(1);
+$('#bGmd2').onclick = () => engage(2);
+$('#bFight').onclick = scramble;
+$('#bEvac').onclick = evac;
+$('#bDefUp').onclick = () => setDefcon(-1);
+$('#bDefDown').onclick = () => setDefcon(1);
+$('#bHot').onclick = hotline;
+$('#bLimited').onclick = () => strike('limited');
+$('#bFull').onclick = () => strike('full');
+$('#bSas').onclick = () => { $('#sasCode').textContent = S.code; $('#sasCode').hidden = false; $('#bSas').hidden = true; log('Obálka SAS rozlomena. Kód ověřují dva důstojníci.', 'warn'); };
+$('#retCode').addEventListener('input', () => ui(true));
+$('#bPause').onclick = () => { if (S && S.running){ S.paused = !S.paused; ui(true); } };
+document.querySelectorAll('.spd').forEach(b => b.onclick = () => { S.speed = +b.dataset.s; ui(true); });
+$('#bSound').onclick = () => { soundOn = !soundOn; $('#bSound').textContent = 'Zvuk: ' + (soundOn ? 'zap' : 'vyp'); };
+document.addEventListener('keydown', e => {
+  if (!S || !S.running || e.target.tagName === 'INPUT' || e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if (k === ' '){ e.preventDefault(); S.paused = !S.paused; }
+  else if (k === '1') S.speed = 1; else if (k === '2') S.speed = 3; else if (k === '3') S.speed = 6;
+  else if (k === 'v') verify(); else if (k === 'g') engage(1); else if (k === 'h') engage(2); else if (k === 'f') scramble();
+  else return;
+  ui(true);
+});
+
+function start(){
+  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume(); } catch (_) { AC = null; }
+  newGame();
+  $('#ovl').hidden = true;
+  ui(true);
+}
+$('#startBtn').onclick = start;
+
+let last = performance.now();
+function frame(now){
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  if (S && S.running && !S.paused && !S.ended) update(dt * GAME_PER_SEC * S.speed);
+  draw(now); ui();
+  requestAnimationFrame(frame);
+}
+readColors();
+new ResizeObserver(resize).observe(wrap);
+resize();
+// idle preview behind the briefing: an empty board
+S = null;
+requestAnimationFrame(frame);
+})();
+</script>
